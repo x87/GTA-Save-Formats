@@ -1,0 +1,117 @@
+//--------------------------------------
+//--- 010 Editor v5.0 Binary Template
+//
+// File: gta3save.bt
+// Author: Seemann
+// Revision: 06.01.2015
+// Purpose: documenting GTA III save file format
+//--------------------------------------
+struct RwV3D
+{
+  float X,Y,Z;
+};
+
+struct
+{
+
+    DWORD size;
+    wchar_t title[24];
+    struct SYSTEMTIME
+    {
+        WORD wYear, wMonth, wDayOfWeek, wDay, wHour, wMinute, wSecond, wMilliseconds;
+    } systemTime;
+    DWORD dword_611570;
+    enum <DWORD> islands {Portland = 1, Staunton, Shoreside} current_island;
+    RwV3D cam_pos;
+    uint game_minute_length_in_ms;
+    uint weather_timer;
+    byte  hours;
+    byte  align1[3];
+    byte  minutes;
+    byte  align2[3];
+    WORD  unk_current_pad;
+    byte  align3[2];
+    uint global_timer;
+    float gamespeed;
+    float flt_8E2CB4;
+    float flt_8E2C4C;
+    uint frames_processed;
+    float unk_5F76C8;
+    float unk_5F76CC;
+    float unk_5F76D0;
+    int16 word_95CCEC;
+    byte align4[2];
+    int16 word_95CC70;
+    byte align5[2];
+    int16 word_95CC80;
+    byte align6[2];
+    float flt_8F2520;
+    DWORD dword_72BCB8;
+    DWORD dword_72BCBC;
+    DWORD dword_72BCC0;
+    DWORD dword_72BCC4;
+    DWORD dword_72BCC8;
+    DWORD dword_72BCCC;
+    DWORD dword_8F626C;
+    float flt_6FADD0;
+    float flt_6FAE58;
+    struct
+    {
+        DWORD size;
+        char scr[4]<comment="SCR">;
+        struct
+        {
+            DWORD size; //=sub_size-12
+            uint  script_vars_space_size;
+            DWORD script_vars[script_vars_space_size / 4];
+            struct
+            {
+                DWORD size <comment="968">;
+                DWORD onmission_var<comment="$ONMISSION offset">;
+                struct 
+                {
+                   DWORD mission_flag<comment="opcode 0181">;
+                   DWORD base_brief<comment="0182">;
+                } contact_info[16];        
+
+                struct
+                {
+                    int32   unknown[16];
+                } unknown[4];
+
+                DWORD dword_942F98 <comment="unused (always 0)?">;
+
+                struct
+                {
+                    DWORD type;
+                    DWORD building_handle;
+                    DWORD new_model;
+                    DWORD old_model;
+                } StaticReplacement[25];
+                
+                struct
+                {
+                    DWORD type;
+                    DWORD handle;
+                } InvisibleObjects[20];
+
+                byte byte_95CD55<comment="unused (always 1)?">;
+                byte align1[3];
+                uint main_size<comment="size of MAIN section in the main.scm">;
+                uint biggest_mission_size;
+                int16 missions_count;
+                byte align2[2];
+
+            } script_info;
+            DWORD threads_count;
+            struct
+            {
+                DWORD p_next;
+                DWORD p_prev;
+                char name[8];
+                byte data[120];
+            } threads[threads_count];                
+
+        } script_data;        
+    } thescripts;
+} b1_misc;
