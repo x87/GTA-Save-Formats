@@ -59,7 +59,7 @@ struct
     struct
     {
         char scr[4]<comment="SCR">;
-        DWORD size; //=sub_size-12
+        DWORD size;
         struct
         {
             uint  script_vars_space_size;
@@ -71,7 +71,7 @@ struct
                 struct 
                 {
                    DWORD mission_flag<comment="opcode 0181">;
-                   DWORD base_brief<comment="0182">;
+                   DWORD base_brief<comment="opcode 0182">;
                 } contact_info[16];        
 
                 struct
@@ -109,7 +109,27 @@ struct
                 DWORD p_next;
                 DWORD p_prev;
                 char name[8];
-                byte data[120];
+                DWORD current_ip;
+                DWORD return_stack[4];
+                DWORD field_24;
+                DWORD field_28;
+                WORD stack_counter;                
+                byte align1[2];
+                DWORD locals[16];
+                DWORD timerA;
+                DWORD timerB;
+                byte field_78;
+                byte field_79;
+                byte field_7A;
+                byte align2;
+                DWORD wake_time;
+                WORD field_80;
+                byte field_82;
+                byte field_83;
+                byte field_84;
+                byte field_85;
+                byte field_86;
+                byte field_87;
             } threads[threads_count];                
 
         } script_data;        
