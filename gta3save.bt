@@ -101,8 +101,8 @@ struct
                 uint biggest_mission_size;
                 int16 missions_count;
                 byte align2[2];
-
             } script_info;
+
             DWORD threads_count;
             struct
             {
@@ -130,8 +130,30 @@ struct
                 byte field_85;
                 byte field_86;
                 byte field_87;
-            } threads[threads_count];                
-
+            } threads[threads_count];
         } script_data;        
     } thescripts;
 } b1_misc;
+
+DWORD size;
+struct
+{
+    DWORD size;
+    struct{
+        DWORD players_count;
+        struct
+        {
+            DWORD unknown;
+            WORD  unknown;        
+            DWORD unknown<comment="ped_ref">;
+            struct
+            {
+                byte ped0[52];
+                RwV3D pos;
+                byte ped1[1456];
+            } CPed;
+            DWORD max_wanted_level;
+            DWORD max_chaos_level;
+        } PlayerPed[players_count] <optimize=false>;
+    } PlayerPeds;
+} b2_player_peds;
