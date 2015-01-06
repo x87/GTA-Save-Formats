@@ -11,10 +11,10 @@ struct RwV3D
   float X,Y,Z;
 };
 
+DWORD size;
 struct
 {
 
-    DWORD size;
     wchar_t title[24];
     struct SYSTEMTIME
     {
@@ -55,18 +55,18 @@ struct
     DWORD dword_8F626C;
     float flt_6FADD0;
     float flt_6FAE58;
+    DWORD size;
     struct
     {
-        DWORD size;
         char scr[4]<comment="SCR">;
+        DWORD size; //=sub_size-12
         struct
         {
-            DWORD size; //=sub_size-12
             uint  script_vars_space_size;
             DWORD script_vars[script_vars_space_size / 4];
+            DWORD size <comment="968">;
             struct
             {
-                DWORD size <comment="968">;
                 DWORD onmission_var<comment="$ONMISSION offset">;
                 struct 
                 {
