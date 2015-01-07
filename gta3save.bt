@@ -156,7 +156,111 @@ struct
             DWORD max_wanted_level;
             DWORD max_chaos_level;
             char model[24];
+            byte align[2];
         } PlayerPed[players_count] <optimize=false>;
-    } PlayerPeds;
-    byte align[2];
+    } PlayerPeds;    
 } b2_player_peds;
+
+/* BLOCK 3: GARAGES */
+DWORD size;
+struct
+{
+    DWORD size<comment="5484">;
+    struct
+    {
+        DWORD garages_count;
+        DWORD free_bombs; 
+        DWORD free_resprays;
+        DWORD dword_880E18<comment="unused?">;
+        DWORD dword_8F1B34;
+        DWORD dword_941444;
+        DWORD import_status[3]<format=binary>;
+        DWORD text_GA_21_timestamp<comment="time when 'GA_21' was last shown">;
+        struct
+        {
+            struct
+            {
+                DWORD model_id;
+                RwV3D pos;
+                RwV3D unknown;
+                DWORD unknown;
+                byte unknown;
+                byte unknown;
+                byte unknown;
+                byte unknown;
+                byte unknown;
+                byte unknown;
+                byte align1[2];            
+            } GarageCar[3]<optimize=false>;
+        } GarageCars[6];
+        struct
+        {
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte align1[2];
+            DWORD unknown;    
+            DWORD unknown<comment="pointer">;
+            DWORD unknown<comment="pointer">;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte align2;
+            float pos_x1;
+            float pos_x2;
+            float pos_y1;
+            float pos_y2;
+            float pos_z1;
+            float pos_z2;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            DWORD unknown;
+            byte unknown;
+            byte align3[3];
+            DWORD unknown;
+            DWORD unknown;
+
+            DWORD unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            float unknown;
+            DWORD unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte unknown;
+            byte align4[2];
+        } Garages[32];
+    } garages_info;
+    byte align[244]<comment="made to fit the hardcoded size of the block">;
+} b3_garages;
+
+/* BLOCK 4: VEHICLES */
+DWORD size;
+struct
+{    
+    DWORD size;
+    struct
+    {
+        /*unknown*/
+        FSkip( size );
+    } vehicles;    
+}b4_vehicles;
