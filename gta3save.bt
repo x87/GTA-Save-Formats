@@ -1,16 +1,17 @@
 //--------------------------------------
 //--- 010 Editor v5.0 Binary Template
 //
-// File: gta3save.bt
 // Author: Seemann
-// Revision: 06.01.2015
 // Purpose: documenting GTA III save file format
+// See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
 struct RwV3D
 {
   float X,Y,Z;
 };
 
+/* START OF SAVE FILE */
+/* BLOCK 0: MISCELLANEOUS */
 DWORD size;
 struct
 {
@@ -135,6 +136,7 @@ struct
     } thescripts;
 } b1_misc;
 
+/* BLOCK 2: PLAYER PEDS */
 DWORD size;
 struct
 {
@@ -154,6 +156,8 @@ struct
             } CPed;
             DWORD max_wanted_level;
             DWORD max_chaos_level;
+            char model[24];
         } PlayerPed[players_count] <optimize=false>;
     } PlayerPeds;
+    byte align[2];
 } b2_player_peds;
