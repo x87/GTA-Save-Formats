@@ -10,12 +10,12 @@ struct RwV3D
   float X,Y,Z;
 };
 
-/* START OF SAVE FILE */
+/* START OF A SAVE FILE */
 /* BLOCK 0: MISCELLANEOUS */
+
 DWORD size;
 struct
 {
-
     wchar_t title[24];
     struct SYSTEMTIME
     {
@@ -56,15 +56,18 @@ struct
     DWORD dword_8F626C;
     float flt_6FADD0;
     float flt_6FAE58;
+    
     DWORD size;
     struct
     {
         char scr[4]<comment="SCR">;
+        
         DWORD size;
         struct
         {
             uint  script_vars_space_size;
             DWORD script_vars[script_vars_space_size / 4];
+            
             DWORD size <comment="968">;
             struct
             {
@@ -74,28 +77,23 @@ struct
                    DWORD mission_flag<comment="opcode 0181">;
                    DWORD base_brief<comment="opcode 0182">;
                 } contact_info[16];        
-
                 struct
                 {
                     int32   unknown[16];
                 } unknown[4];
-
                 DWORD dword_942F98 <comment="unused (always 0)?">;
-
                 struct
                 {
                     DWORD type;
                     DWORD building_handle;
                     DWORD new_model;
                     DWORD old_model;
-                } StaticReplacement[25];
-                
+                } StaticReplacement[25];              
                 struct
                 {
                     DWORD type;
                     DWORD handle;
                 } InvisibleObjects[20];
-
                 byte byte_95CD55<comment="unused (always 1)?">;
                 byte align1[3];
                 uint main_size<comment="size of MAIN section in the main.scm">;
@@ -103,7 +101,6 @@ struct
                 int16 missions_count;
                 byte align2[2];
             } script_info;
-
             DWORD threads_count;
             struct
             {
@@ -137,9 +134,11 @@ struct
 } b1_misc;
 
 /* BLOCK 2: PLAYER PEDS */
+
 DWORD size;
 struct
 {
+    
     DWORD size;
     struct{
         DWORD players_count;
