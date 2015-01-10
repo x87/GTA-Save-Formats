@@ -143,7 +143,7 @@ struct
                         byte    field_87;
                     } CRunningScript[threadsCount];
                 } data <name="Scripts">;        
-            } block;
+            } data;
         } data <name="Misc">;
     break;
         
@@ -168,7 +168,7 @@ struct
                     DWORD   maxChaosLevel;
                     char    modelName[24];     
                 } PlayerPed[playersCount] <optimize=false>;        
-            } block;                    
+            } data;                 
         } data <name="PlayerPeds">; 
     break;
 
@@ -259,7 +259,7 @@ struct
                     byte    unknown;
                     byte    align4[2];
                 } Garage[32];
-            } block;
+            } data;
         } data <name="Garages">;
     break;
 
@@ -290,8 +290,54 @@ struct
                     flag    overrideHospitalLevel <comment="opcode 041F">;
                     flag    overridePoliceLevel <comment="opcode 0420">;
                 } data <name="Restarts">;
-            } block;
+            } data;
         } data <name="Restarts">;
+        break;   
+     
+    case 14: /* BLOCK 14: CAR GENERATORS */
+        struct
+        {    
+            DWORD size;
+            struct
+            {
+                char    sig[4]<comment="CGN">;
+                DWORD   size;  
+                struct
+                {
+                    DWORD size <comment="12">;
+                    struct
+                    {
+                        DWORD   totalCount;
+                        DWORD   activeCount;
+                        byte    unknown;
+                        byte    unknown;
+                        byte    align[2];
+                    } data;
+
+                    DWORD size <comment="11560">;
+                    struct
+                    {
+                        //FSkip(0x48);
+                        DWORD   modelId;
+                        RwV3D   pos;
+                        float   angle;
+                        int16   primaryColor, secondaryColor;
+                        flag    forceSpawn;
+                        byte    alarm;
+                        byte    doorLock;
+                        byte    align;
+                        WORD    minDelay, maxDelay;
+                        DWORD   time;
+                        int     unknown;
+                        int     unknown;
+                        RwV3D   unknown;
+                        RwV3D   unknown;
+                        DWORD   unknown;
+                    } CarGenerator[160];
+                    
+                } data <name="CarGenerators">;
+            } data;
+        } data <name="CarGenerators">;
         break;        
 
     case 21:
