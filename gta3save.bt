@@ -5,6 +5,11 @@
 // Purpose: documenting GTA III save file format
 // See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
+
+const uint SF_SIZE_GTA3 = 201820;
+
+Assert(FileSize() == SF_SIZE_GTA3, "File size must be 201820 bytes");
+
 typedef struct RwV3D
 {
   float X, Y, Z;
@@ -14,6 +19,7 @@ enum<byte>flag{OFF,ON};
 
 local int n = 0;
 local int s = 0;
+
 
 struct
 {
@@ -290,6 +296,16 @@ struct
         } data <name="Restarts">;
         break;        
 
+    case 21:
+        struct{
+            FSkip(size);
+        }data<name="padding">;
+        break;
+    case 22:
+        struct{
+            FSkip(size);
+        }data<name="padding">;
+        break;
     default:
         struct
         {
@@ -297,4 +313,12 @@ struct
         } data;
     }
     if (sizeof(data) < size) byte align[size-sizeof(data)];
-} block[20]<optimize=false,open=true>;
+} block[22]<optimize=false,open=true>;
+string checkSum(int sum){
+    uint newSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
+    WriteUInt(FileSize()-4, newSum);
+    string s;
+    SPrintf( s, "%d", (int)newSum );
+    return s;
+};
+DWORD checksum<read=checkSum>;
