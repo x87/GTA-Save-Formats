@@ -6,9 +6,9 @@
 // See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
 
-const uint SF_SIZE_GTA3 = 201820;
+const string SF_SIZE_GTA3 = "201820";
 
-Assert(FileSize() == SF_SIZE_GTA3, "File size must be 201820 bytes");
+Assert(FileSize() == BinaryStrToInt(SF_SIZE_GTA3), "File size must be " + SF_SIZE_GTA3 + " bytes");
 
 typedef struct RwV3D
 {
