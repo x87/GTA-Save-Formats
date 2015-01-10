@@ -142,7 +142,7 @@ struct
 DWORD size;
 struct
 {      
-    DWORD size;
+    DWORD _size;
     struct{
         DWORD players_count;
         struct
@@ -161,9 +161,8 @@ struct
             char model[24];     
         } PlayerPed[players_count] <optimize=false>;        
     } player_peds_block;    
+    byte align[size-sizeof(player_peds_block)-4];
 } b2_player_peds;
-
-byte align[size-sizeof(b2_player_peds)];
 
 /* BLOCK 3: GARAGES */
 DWORD size;
