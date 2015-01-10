@@ -10,6 +10,8 @@ struct RwV3D
   float X,Y,Z;
 };
 
+enum<byte>flag{off,on};
+
 /* START OF A SAVE FILE */
 /* BLOCK 0: MISCELLANEOUS */
 
@@ -325,13 +327,13 @@ struct
             RestartPoint busted[8];
             WORD wasted_restart_points_count;
             WORD busted_restart_points_count;
-            byte override_next_restart<comment="opcodes 016E, 0255">;
+            flag override_next_restart<comment="opcodes 016E, 0255">;
             byte align[3];
             RestartPoint overriden_restart_point<comment="opcodes 016E, 0255">;
-            byte fade_in_after_next_death<comment="opcode 040F">;
-            byte fade_in_after_next_arrest<comment="opcode 040E">;
-            byte override_hospital_level<comment="opcode 041F">;
-            byte override_police_level<comment="opcode 0420">;
+            flag fade_in_after_next_death<comment="opcode 040F">;
+            flag fade_in_after_next_arrest<comment="opcode 040E">;
+            flag override_hospital_level<comment="opcode 041F">;
+            flag override_police_level<comment="opcode 0420">;
         }restart_data;
     }restart_block;
 }b10_restarts;
