@@ -6,9 +6,7 @@
 // See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
 
-const string SF_SIZE_GTA3 = "201820";
-
-Assert(FileSize() == BinaryStrToInt(SF_SIZE_GTA3), "File size must be " + SF_SIZE_GTA3 + " bytes");
+Assert(FileSize() == 201820, "File size must be 201820 bytes");
 
 typedef struct RwV3D
 {
@@ -297,10 +295,6 @@ struct
         break;        
 
     case 21:
-        struct{
-            FSkip(size);
-        }data<name="padding">;
-        break;
     case 22:
         struct{
             FSkip(size);
