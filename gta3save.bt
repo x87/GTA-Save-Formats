@@ -5,336 +5,296 @@
 // Purpose: documenting GTA III save file format
 // See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
-struct RwV3D
+typedef struct RwV3D
 {
-  float X,Y,Z;
+  float X, Y, Z;
 };
 
-enum<byte>flag{off,on};
+enum<byte>flag{OFF,ON};
 
-/* START OF A SAVE FILE */
-/* BLOCK 1: MISCELLANEOUS */
+local int n = 0;
+local int s = 0;
 
-DWORD size;
 struct
 {
-    wchar_t title[24];
-    struct SYSTEMTIME
-    {
-        WORD wYear, wMonth; 
-        enum<WORD> {SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY} wDayOfWeek; 
-        WORD wDay, wHour, wMinute, wSecond, wMilliseconds;
-    } system_time;
-    DWORD dword_611570;
-    enum <DWORD> islands {Portland = 1, Staunton, Shoreside} current_island;
-    RwV3D camera_pos;
-    uint game_minute_length_in_ms;
-    uint weather_timer;
-    byte  hours;
-    byte  align1[3];
-    byte  minutes;
-    byte  align2[3];
-    WORD  unknown<comment="current pad?">;
-    byte  align3[2];
-    uint global_timer;
-    float gamespeed;
-    float flt_8E2CB4;
-    float flt_8E2C4C;
-    uint frames_processed;
-    float unk_5F76C8;
-    float unk_5F76CC;
-    float unk_5F76D0;
-    int16 word_95CCEC;
-    byte align4[2];
-    int16 word_95CC70;
-    byte align5[2];
-    int16 word_95CC80;
-    byte align6[2];
-    float flt_8F2520;
-    DWORD dword_72BCB8;
-    DWORD dword_72BCBC;
-    DWORD dword_72BCC0;
-    DWORD dword_72BCC4;
-    DWORD dword_72BCC8;
-    DWORD dword_72BCCC;
-    DWORD dword_8F626C;
-    float flt_6FADD0;
-    float flt_6FAE58;
-    
     DWORD size;
-    struct
+    switch (++n)
     {
-        char sig[4]<comment="SCR">;
-        
-        DWORD size;
+    case 1: /* BLOCK 1: MISCELLANEOUS */
         struct
         {
-            uint  script_vars_space_size;
-            DWORD script_vars[script_vars_space_size / 4];
+            wchar_t title[24];
+            struct SYSTEMTIME
+            {
+                WORD wYear, wMonth; 
+                enum<WORD> {SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY} wDayOfWeek; 
+                WORD wDay, wHour, wMinute, wSecond, wMilliseconds;
+            } systemTime;
+            DWORD   dword_611570;
+            enum <DWORD> islands {Portland = 1, Staunton, Shoreside} current_island;
+            RwV3D   cameraPos;
+            uint    minuteLength;
+            uint    weatherTimer;
+            byte    hours;
+            byte    align1[3];
+            byte    minutes;
+            byte    align2[3];
+            WORD    unknown <comment="current pad?">;
+            byte    align3[2];
+            uint    globalTimer;
+            float   gameSpeed;
+            float   unk_8E2CB4;
+            float   unk_8E2C4C;
+            uint    framesProcessed;
+            float   unk_5F76C8;
+            float   unk_5F76CC;
+            float   unk_5F76D0;
+            int16   unk_95CCEC;
+            byte    align4[2];
+            int16   unk_95CC70;
+            byte    align5[2];
+            int16   unk_95CC80;
+            byte    align6[2];
+            float   unk_8F2520;
+            DWORD   unk_72BCB8;
+            DWORD   unk_72BCBC;
+            DWORD   unk_72BCC0;
+            DWORD   unk_72BCC4;
+            DWORD   unk_72BCC8;
+            DWORD   unk_72BCCC;
+            DWORD   unk_8F626C;
+            float   unk_6FADD0;
+            float   unk_6FAE58;
             
-            DWORD size <comment="968">;
+            DWORD size;
             struct
             {
-                DWORD onmission_var<comment="$ONMISSION offset">;
-                struct 
-                {
-                   DWORD mission_flag<comment="opcode 0181">;
-                   DWORD base_brief<comment="opcode 0182">;
-                } ContactInfo[16];        
+                char sig[4] <comment="SCR">;
+                
+                DWORD   size;
                 struct
                 {
-                    int32   unknown[16];
-                } unknown[4];
-                DWORD dword_942F98 <comment="unused (always 0)?">;
+                    uint    scriptVarsSize;
+                    DWORD   scriptVars[scriptVarsSize / 4];
+                    
+                    DWORD   size <comment="968">;
+                    struct
+                    {
+                        DWORD   onmissionVar <comment="$ONMISSION offset">;
+                        struct 
+                        {
+                           DWORD    missionFlag <comment="opcode 0181">;
+                           DWORD    baseBrief <comment="opcode 0182">;
+                        } ContactInfo[16];        
+                        struct
+                        {
+                            int32   unknown[16];
+                        } unknown[4];
+                        DWORD   unk_942F98 <comment="unused (always 0)?">;
+                        struct
+                        {
+                            DWORD   type;
+                            DWORD   buildingHandle;
+                            DWORD   newModel;
+                            DWORD   oldModel;
+                        } StaticReplacement[25];              
+                        struct
+                        {
+                            DWORD   type;
+                            DWORD   handle;
+                        } InvisibleObjects[20];
+                        byte    unk_95CD55 <comment="unused (always 1)?">;
+                        byte    align1[3];
+                        uint    scmMainSize <comment="size of MAIN section in the main.scm">;
+                        uint    largest_mission_size;
+                        int16   missionsCount;
+                        byte    align2[2];
+                    } ScriptInfo;
+                    DWORD   threadsCount;
+                    struct
+                    {
+                        DWORD   p_next;
+                        DWORD   p_prev;
+                        char    name[8];
+                        DWORD   currentIp;
+                        DWORD   returnStack[4];
+                        DWORD   field_24;
+                        DWORD   field_28;
+                        WORD    stackCounter;                
+                        byte    align1[2];
+                        DWORD   locals[16];
+                        DWORD   timerA;
+                        DWORD   timerB;
+                        byte    ifResult;
+                        byte    field_79;
+                        byte    field_7A;
+                        byte    align2;
+                        DWORD   wakeTime;
+                        WORD    ifNumber;
+                        byte    field_82;
+                        byte    field_83;
+                        byte    field_84;
+                        byte    field_85;
+                        byte    field_86;
+                        byte    field_87;
+                    } CRunningScript[threadsCount];
+                } data <name="Scripts">;        
+            } block;
+        } data <name="Misc">;
+    break;
+        
+    case 2: /* BLOCK 2: PLAYER PEDS */
+        struct
+        {      
+            DWORD size;
+            struct {
+                DWORD playersCount;
                 struct
                 {
-                    DWORD type;
-                    DWORD building_handle;
-                    DWORD new_model;
-                    DWORD old_model;
-                } StaticReplacement[25];              
+                    DWORD   unknown;
+                    WORD    unknown;        
+                    DWORD   unknown <comment="ped_ref">;
+                    struct
+                    {
+                        byte    ped0[52];
+                        RwV3D   pos;
+                        byte    ped1[1456];
+                    } CPed;
+                    DWORD   maxWantedLevel;
+                    DWORD   maxChaosLevel;
+                    char    modelName[24];     
+                } PlayerPed[playersCount] <optimize=false>;        
+            } block;                    
+        } data <name="PlayerPeds">; 
+    break;
+
+    case 3: /* BLOCK 3: GARAGES */
+        struct
+        {
+            DWORD size <comment="5484">;
+            struct
+            {
+                DWORD   garagesCount;
+                DWORD   freeBombs; 
+                DWORD   freeResprays;
+                DWORD   unk_880E18 <comment="unused?">;
+                DWORD   unk_8F1B34;
+                DWORD   unk_941444;
+                DWORD   importStatus[3]<format=binary>;
+                DWORD   textGA21Timestamp <comment="time when 'GA_21' was last shown">;
                 struct
                 {
-                    DWORD type;
-                    DWORD handle;
-                } InvisibleObjects[20];
-                byte byte_95CD55<comment="unused (always 1)?">;
-                byte align1[3];
-                uint scm_main_size<comment="size of MAIN section in the main.scm">;
-                uint largest_mission_size;
-                int16 missions_count;
-                byte align2[2];
-            } ScriptInfo;
-            DWORD threads_count;
+                    struct
+                    {
+                        DWORD   model_id;
+                        RwV3D   pos;
+                        RwV3D   rotation;
+                        DWORD   unknown;
+                        byte    unknown;
+                        byte    unknown;
+                        byte    unknown;
+                        byte    unknown;
+                        byte    unknown;
+                        byte    unknown;
+                        byte    align1[2];            
+                    } StoredCar[6]<optimize=false>;
+                } StoredCars[3]<comment="one entry per island">;
+                struct
+                {
+                    byte    type <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    align1[2];
+                    DWORD   unknown;    
+                    DWORD   unknown <comment="pointer">;
+                    DWORD   unknown <comment="pointer">;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    align2;
+                    float   x1;
+                    float   x2;
+                    float   y1;
+                    float   y2;
+                    float   z1;
+                    float   z2;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    DWORD   unknown;
+                    byte    unknown;
+                    byte    align3[3];
+                    DWORD   unknown;
+                    DWORD   unknown;
+        
+                    DWORD   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    float   unknown;
+                    DWORD   unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    unknown;
+                    byte    align4[2];
+                } Garage[32];
+            } block;
+        } data <name="Garages">;
+    break;
+
+    case 10: /* BLOCK 10: RESTARTS */
+        struct
+        {    
+            DWORD size;
             struct
             {
-                DWORD p_next;
-                DWORD p_prev;
-                char name[8];
-                DWORD current_ip;
-                DWORD return_stack[4];
-                DWORD field_24;
-                DWORD field_28;
-                WORD stack_counter;                
-                byte align1[2];
-                DWORD locals[16];
-                DWORD timerA;
-                DWORD timerB;
-                byte if_result;
-                byte field_79;
-                byte field_7A;
-                byte align2;
-                DWORD wake_time;
-                WORD if_number;
-                byte field_82;
-                byte field_83;
-                byte field_84;
-                byte field_85;
-                byte field_86;
-                byte field_87;
-            } CRunningScript[threads_count];
-        } script_data;        
-    } script_block;
-} b1_misc;
+                char    sig[4]<comment="RST">;
+                DWORD   size;  
+                struct
+                {
+                    typedef struct RestartPoint
+                    {
+                        RwV3D pos;
+                        float angle;
+                    };
+                    RestartPoint    wasted[8];
+                    RestartPoint    busted[8];
+                    WORD    wastedRestartsCount;
+                    WORD    bustedRestartsCount;
+                    flag    overrideNextRestart <comment="opcodes 016E, 0255">;
+                    byte     align[3];
+                    RestartPoint overridenRestartPoint <comment="opcodes 016E, 0255">;
+                    flag    fadeInAfterNextDeath <comment="opcode 040F">;
+                    flag    fadeInAfterNextArrest <comment="opcode 040E">;
+                    flag    overrideHospitalLevel <comment="opcode 041F">;
+                    flag    overridePoliceLevel <comment="opcode 0420">;
+                } data <name="Restarts">;
+            } block;
+        } data <name="Restarts">;
+        break;        
 
-/* BLOCK 2: PLAYER PEDS */
-
-DWORD size;
-struct
-{      
-    DWORD _size;
-    struct{
-        DWORD players_count;
+    default:
         struct
         {
-            DWORD unknown;
-            WORD  unknown;        
-            DWORD unknown<comment="ped_ref">;
-            struct
-            {
-                byte ped0[52];
-                RwV3D pos;
-                byte ped1[1456];
-            } CPed;
-            DWORD max_wanted_level;
-            DWORD max_chaos_level;
-            char model[24];     
-        } PlayerPed[players_count] <optimize=false>;        
-    } player_peds_block;    
-    byte align[size-sizeof(player_peds_block)-4];
-} b2_player_peds;
-
-/* BLOCK 3: GARAGES */
-DWORD size;
-struct
-{
-    DWORD size<comment="5484">;
-    struct
-    {
-        DWORD garages_count;
-        DWORD free_bombs; 
-        DWORD free_resprays;
-        DWORD dword_880E18<comment="unused?">;
-        DWORD dword_8F1B34;
-        DWORD dword_941444;
-        DWORD import_status[3]<format=binary>;
-        DWORD text_GA_21_timestamp<comment="time when 'GA_21' was last shown">;
-        struct
-        {
-            struct
-            {
-                DWORD model_id;
-                RwV3D pos;
-                RwV3D rotation;
-                DWORD unknown;
-                byte unknown;
-                byte unknown;
-                byte unknown;
-                byte unknown;
-                byte unknown;
-                byte unknown;
-                byte align1[2];            
-            } StoredCar[6]<optimize=false>;
-        } StoredCars[3]<comment="one entry per island">;
-        struct
-        {
-            byte type <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte align1[2];
-            DWORD unknown;    
-            DWORD unknown<comment="pointer">;
-            DWORD unknown<comment="pointer">;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte align2;
-            float x1;
-            float x2;
-            float y1;
-            float y2;
-            float z1;
-            float z2;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            DWORD unknown;
-            byte unknown;
-            byte align3[3];
-            DWORD unknown;
-            DWORD unknown;
-
-            DWORD unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            float unknown;
-            DWORD unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte unknown;
-            byte align4[2];
-        } Garages[32];
-    } garages_block;
-    byte align[244]<comment="made to fit the hardcoded size of the block">;
-} b3_garages;
-
-/* BLOCK 4: VEHICLES */
-DWORD size;
-struct
-{    
-    DWORD size;
-    struct
-    {
-        /*unknown*/
-        FSkip( size );
-    } vehicles;    
-}b4_vehicles;
-
-/* BLOCK 5 */
-DWORD size;
-struct
-{    
-    DWORD size;
-    FSkip( size );
-}b5;
-
-/* BLOCK 6 */
-DWORD size;
-struct
-{    
-    DWORD size;
-    FSkip( size );
-}b6;
-
-/* BLOCK 7 */
-DWORD size;
-struct
-{    
-    DWORD size;
-    FSkip( size );
-}b7;
-
-/* BLOCK 8 */
-DWORD size;
-struct
-{    
-    DWORD size;
-    FSkip( size );
-}b8;
-
-/* BLOCK 9 */
-DWORD size;
-struct
-{    
-    DWORD size;
-    FSkip( size );
-}b9;
-
-/* BLOCK 10 */
-DWORD size;
-struct
-{    
-    DWORD size;
-    struct
-    {
-        char sig[4]<comment="RST">;
-        DWORD size;  
-        struct
-        {
-            struct RestartPoint
-            {
-                RwV3D pos;
-                float angle;
-            };
-            RestartPoint wasted[8];
-            RestartPoint busted[8];
-            WORD wasted_restart_points_count;
-            WORD busted_restart_points_count;
-            flag override_next_restart<comment="opcodes 016E, 0255">;
-            byte align[3];
-            RestartPoint overriden_restart_point<comment="opcodes 016E, 0255">;
-            flag fade_in_after_next_death<comment="opcode 040F">;
-            flag fade_in_after_next_arrest<comment="opcode 040E">;
-            flag override_hospital_level<comment="opcode 041F">;
-            flag override_police_level<comment="opcode 0420">;
-        }restart_data;
-    }restart_block;
-} b10_restarts;
+            FSkip(size);
+        } data;
+    }
+    if (sizeof(data) < size) byte align[size-sizeof(data)];
+} block[20]<optimize=false,open=true>;
