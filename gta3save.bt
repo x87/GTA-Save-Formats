@@ -117,8 +117,8 @@ struct
                     DWORD   threadsCount;
                     struct
                     {
-                        DWORD   next;
-                        DWORD   prev;
+                        DWORD   ptrNext;
+                        DWORD   ptrPrev;
                         char    name[8];
                         DWORD   currentIp;
                         DWORD   returnStack[4];
@@ -316,7 +316,29 @@ struct
             } data;
         } data <name="Restarts">;
         break;   
-     
+    
+    case 13: /* BLOCK 13: GANGS */
+
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                char    sig[4] <comment="GNG">;
+                DWORD   size;
+                struct
+                {
+                    int     carModel;
+                    byte    pedModelOverride <comment="opcode 0410">;
+                    byte    unknown <comment="unused?">;
+                    WORD    unknown <comment="unused?">;
+                    DWORD   primaryWeapon;
+                    DWORD   secondaryWeapon;
+                } Gang[9];
+            } data;
+        } data <name="Gangs">;
+        break;
+ 
     case 14: /* BLOCK 14: CAR GENERATORS */
         struct
         {    
