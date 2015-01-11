@@ -117,8 +117,8 @@ struct
                     DWORD   threadsCount;
                     struct
                     {
-                        DWORD   p_next;
-                        DWORD   p_prev;
+                        DWORD   next;
+                        DWORD   prev;
                         char    name[8];
                         DWORD   currentIp;
                         DWORD   returnStack[4];
@@ -263,6 +263,29 @@ struct
         } data <name="Garages">;
     break;
 
+    case 7: /* BLOCK 7: CRANES */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                DWORD   cranesCount;
+                DWORD   militaryCarsCollected<format=binary, comment="opcode 03ec">;
+                struct
+                {
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    float   unk_float[25];
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    byte    unk_byte[7];
+                    byte    align;
+                } Crane[8] <optimize=false>;
+            } data;
+        } data <name="Cranes">;
+    break;
+
     case 10: /* BLOCK 10: RESTARTS */
         struct
         {    
@@ -317,7 +340,6 @@ struct
                     DWORD size <comment="11560">;
                     struct
                     {
-                        //FSkip(0x48);
                         DWORD   modelId;
                         RwV3D   pos;
                         float   angle;
