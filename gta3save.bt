@@ -85,35 +85,41 @@ struct
                     struct
                     {
                         DWORD   onmissionVar <comment="$ONMISSION offset">;
+
                         struct 
                         {
                            DWORD    missionFlag <comment="opcode 0181">;
                            DWORD    baseBrief <comment="opcode 0182">;
-                        } ContactInfo[16];        
+                        } ContactInfo[16];
+        
                         struct
                         {
                             int32   unknown[16];
                         } unknown[4];
+
                         DWORD   unk_942F98 <comment="unused (always 0)?">;
+
                         struct
                         {
                             DWORD   type;
                             DWORD   buildingHandle;
                             DWORD   newModel;
                             DWORD   oldModel;
-                        } StaticReplacement[25];              
+                        } StaticReplacement[25];
+              
                         struct
                         {
                             DWORD   type;
                             DWORD   handle;
                         } InvisibleObjects[20];
+
                         byte    unk_95CD55 <comment="unused (always 1)?">;
                         byte    align1[3];
                         uint    scmMainSize <comment="size of MAIN section in the main.scm">;
                         uint    largest_mission_size;
                         int16   missionsCount;
                         byte    align2[2];
-                    } ScriptInfo;
+                    } data;
                     DWORD   threadsCount;
                     struct
                     {
@@ -273,7 +279,7 @@ struct
                 DWORD   militaryCarsCollected<format=binary, comment="opcode 03ec">;
                 struct
                 {
-                    DWORD   unknown;
+                    DWORD   m_dwStaticIndex <comment="index in static objects pool?">;
                     DWORD   unknown;
                     DWORD   unknown;
                     float   unk_float[25];
@@ -284,6 +290,28 @@ struct
                 } Crane[8] <optimize=false>;
             } data;
         } data <name="Cranes">;
+    break;
+
+    case 9: /* BLOCK 9: PHONES */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                DWORD   phonesCount;
+                DWORD   activePhones;
+                struct
+                {
+                    RwV3D   m_vPos;
+                    UINT32  m_pszText[6] <comment="pointers to text assigned with opcodes like 0388">;
+                    DWORD   unknown;
+                    DWORD   m_dwStaticIndex <comment="index in static objects pool?">;
+                    enum<DWORD>{eIdle=3,eRinging=9}   m_eStatus;
+                    byte    unknown;
+                    byte    align[3];
+                } Phone[50];
+            } data;
+        } data <name="Phones">;
     break;
 
     case 10: /* BLOCK 10: RESTARTS */
@@ -330,8 +358,8 @@ struct
                 {
                     int     carModel;
                     byte    pedModelOverride <comment="opcode 0410">;
-                    byte    unknown <comment="unused?">;
-                    WORD    unknown <comment="unused?">;
+                    byte    unknown <comment="unused/align?">;
+                    WORD    unknown <comment="unused/align?">;
                     DWORD   primaryWeapon;
                     DWORD   secondaryWeapon;
                 } Gang[9];
