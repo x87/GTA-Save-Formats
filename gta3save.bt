@@ -196,16 +196,16 @@ struct
                 {
                     struct
                     {
-                        DWORD   model_id;
-                        RwV3D   pos;
-                        RwV3D   rotation;
-                        DWORD   unknown;
-                        byte    unknown;
-                        byte    unknown;
-                        byte    unknown;
-                        byte    unknown;
-                        byte    unknown;
-                        byte    unknown;
+                        DWORD   m_dwModelId;
+                        RwV3D   m_vPos;
+                        RwV3D   m_vRotation;
+                        DWORD   m_dwImmunities<format=binary>;
+                        byte    m_bPrimaryColor;
+                        byte    m_bSecondaryColor;
+                        byte    m_bRadioStation;
+                        byte    m_bModelVariationA;
+                        byte    m_bModelVariationB;
+                        byte    m_bBombType;
                         byte    align1[2];            
                     } StoredCar[6]<optimize=false>;
                 } StoredCars[3]<comment="one entry per island">;
