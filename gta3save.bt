@@ -361,20 +361,20 @@ struct
                         CHAR    m_szName[8];
                         RwV3D   m_vCoordA;
                         RwV3D   m_vCoordB;
-                        DWORD   unknown;
+                        enum<DWORD>{}   m_eZoneType <comment="0, 1, 2 or 3 for MapZone">;
                         ISLAND  m_eCurrentIsland;
                         WORD    m_wZoneInfoIdNight;
                         WORD    m_wZoneInfoIdDay;
-                        INT32   unknown <comment="neighbour/inner/outer zone index?">;
-                        INT32   unknown <comment="neighbour/inner/outer zone index?">;
-                        INT32   unknown <comment="neighbour/inner/outer zone index?">;
+                        INT32   unknown <comment="neighbour/inner/outer? zone index">;
+                        INT32   unknown <comment="neighbour/inner/outer? zone index">;
+                        INT32   unknown <comment="neighbour/inner/outer? zone index">;
                     } Zone;
 
-                    DWORD   m_dwZoneId;
+                    DWORD   m_dwCurrentZoneIndex;
                     ISLAND  m_eCurrentIsland;
-                    WORD    m_dwZoneIndex;
+                    WORD    m_dwLastSearchZoneIndex <comment="index of last search invoked by a script">;
                     BYTE    align[2];
-                    Zone    m_aZones[50] <comment="from gta3.zon">;
+                    Zone    m_aZone[50] <comment="from gta3.zon">;
                     struct
                     {
                         WORD    m_waDensity[29];
@@ -384,9 +384,10 @@ struct
                     Zone    m_aMapZone[25] <comment="from map.zon">;
                     struct
                     {
-                        WORD    unknown[6];
-                    } unknown1[6];
+                        INT16    m_wZoneId;
+                    } m_aAudioZone[36];
                     WORD    m_wMapZoneCount;
+                    WORD    m_wAudioZoneCount;
                 } data;
             } data;
         } block <name="Zones">;
