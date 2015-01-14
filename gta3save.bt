@@ -6,14 +6,15 @@
 // See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
 
-Assert(FileSize() == 201820, "File size must be 201820 BYTEs");
+Assert(FileSize() == 201820, "File size must be 201820 bytes");
 
 typedef struct RwV3D
 {
   FLOAT X, Y, Z;
 };
 
-enum<BYTE>FLAG{OFF,ON};
+enum <BYTE>  FLAG    {OFF,ON};
+enum <DWORD> ISLAND {Portland = 1, Staunton, Shoreside};
 
 local int n = 0;
 local int s = 0;
@@ -35,7 +36,7 @@ struct
                 WORD m_wDay, m_wHour, m_wMinute, m_wSecond, m_wMilliseconds;
             } systemTime;
             DWORD   _611570;
-            enum <DWORD> islands {Portland = 1, Staunton, Shoreside} m_eCurrentIsland;
+            ISLAND  m_eCurrentIsland;
             RwV3D   m_vCameraPos;
             UINT    m_dwMinuteLength;
             UINT    m_dwWeatherTimer;
@@ -148,9 +149,9 @@ struct
                         BYTE    _f86;
                         BYTE    _f87;
                     } m_aRunningScript[m_dwThreadsCount];
-                } data <name="Scripts">;        
+                } data;
             } data;
-        } data <name="Misc">;
+        } block <name="Misc">;
         break;
         
     case 2: /* BLOCK 2: PLAYER PEDS */
@@ -175,7 +176,7 @@ struct
                     CHAR    m_szModelName[24];     
                 } m_aPlayerPed[m_dwPlayersCount] <optimize=false>;        
             } data;                 
-        } data <name="PlayerPeds">; 
+        } block <name="PlayerPeds">; 
         break;
 
     case 3: /* BLOCK 3: GARAGES */
@@ -266,7 +267,7 @@ struct
                     BYTE    align4[2];
                 } m_aGarage[32];
             } data;
-        } data <name="Garages">;
+        } block <name="Garages">;
         break;
 
     case 7: /* BLOCK 7: CRANES */
@@ -289,7 +290,7 @@ struct
                     BYTE    align;
                 } m_aCrane[8] <optimize=false>;
             } data;
-        } data <name="Cranes">;
+        } block <name="Cranes">;
         break;
 
     case 9: /* BLOCK 9: PHONES */
@@ -311,7 +312,7 @@ struct
                     BYTE    align[3];
                 } m_aPhone[50];
             } data;
-        } data <name="Phones">;
+        } block <name="Phones">;
         break;
 
     case 10: /* BLOCK 10: RESTARTS */
@@ -340,10 +341,56 @@ struct
                     FLAG    m_bFadeInAfterNextArrest <comment="opcode 040E">;
                     FLAG    m_bOverrideHospitalLevel <comment="opcode 041F">;
                     FLAG    m_bOverridePoliceLevel <comment="opcode 0420">;
-                } data <name="Restarts">;
+                } data;
             } data;
-        } data <name="Restarts">;
+        } block <name="Restarts">;
         break;   
+
+    case 12: /* BLOCK 12: THE ZONES */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                CHAR    sig[4] <comment="ZNS">;
+                DWORD   size;
+                struct
+                {
+                    typedef struct
+                    {
+                        CHAR    m_szName[8];
+                        RwV3D   m_vCoordA;
+                        RwV3D   m_vCoordB;
+                        DWORD   unknown;
+                        ISLAND  m_eCurrentIsland;
+                        WORD    m_wZoneInfoIdNight;
+                        WORD    m_wZoneInfoIdDay;
+                        INT32   unknown <comment="neighbour/inner/outer zone index?">;
+                        INT32   unknown <comment="neighbour/inner/outer zone index?">;
+                        INT32   unknown <comment="neighbour/inner/outer zone index?">;
+                    } Zone;
+
+                    DWORD   m_dwZoneId;
+                    ISLAND  m_eCurrentIsland;
+                    WORD    m_dwZoneIndex;
+                    BYTE    align[2];
+                    Zone    m_aZones[50] <comment="from gta3.zon">;
+                    struct
+                    {
+                        WORD    m_waDensity[29];
+                    } m_aZoneInfo[100] <comment="day/night pairs for each Zone">;
+                    WORD    m_wZoneCount;
+                    WORD    m_wZoneInfoCount;
+                    Zone    m_aMapZone[25] <comment="from map.zon">;
+                    struct
+                    {
+                        WORD    unknown[6];
+                    } unknown1[6];
+                    WORD    m_wMapZoneCount;
+                } data;
+            } data;
+        } block <name="Zones">;
+        break;
     
     case 13: /* BLOCK 13: GANGS */
 
@@ -364,7 +411,7 @@ struct
                     DWORD   m_dwSecondaryWeapon;
                 } m_aGang[9];
             } data;
-        } data <name="Gangs">;
+        } block <name="Gangs">;
         break;
  
     case 14: /* BLOCK 14: CAR GENERATORS */
@@ -407,9 +454,9 @@ struct
                         DWORD   _unknown;
                     } m_aCarGenerator[160];
                     
-                } data <name="CarGenerators">;
+                } data;
             } data;
-        } data <name="CarGenerators">;
+        } block <name="CarGenerators">;
         break;        
 
     case 17: /* BLOCK 17: PLAYER INFO */
@@ -432,22 +479,22 @@ struct
                 FLAG    m_bFreeHealthCare <comment="opcode 0414">;
                 BYTE    unknown[70];
             } PlayerInfo;
-        } data <name="PlayerInfo">;
+        } block <name="PlayerInfo">;
         break;
     case 21:
     case 22:
         struct
         {
             FSkip(size);
-        } data <name="padding">;
+        } block <name="padding">;
         break;
     default:
         struct
         {
             FSkip(size);
-        } data;
+        } block;
     }
-    if (sizeof(data) < size) BYTE align[size-sizeof(data)];
+    if (sizeof(block) < size) BYTE align[size-sizeof(block)];
 } block[22]<optimize=false,open=true>;
 string checkSum(int dwOldSum){
     UINT dwNewSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
