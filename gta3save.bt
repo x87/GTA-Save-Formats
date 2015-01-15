@@ -6,7 +6,7 @@
 // See http://www.gtamodding.com/wiki/Saves_(GTA_3)
 //--------------------------------------
 
-Assert(FileSize() == 201820, "File size must be 201820 bytes");
+//Assert(FileSize() == 201820, "File size must be 201820 bytes");
 
 typedef struct RwV3D
 {
@@ -23,9 +23,9 @@ local int s = 0;
 struct
 {
     DWORD size;
-    switch (++n)
+    switch (n++)
     {
-    case 1: /* BLOCK 1: MISCELLANEOUS */
+    case 0: /* BLOCK 0: MISCELLANEOUS */
         struct
         {
             wchar_t m_szTitle[24];
@@ -154,7 +154,7 @@ struct
         } block <name="Misc">;
         break;
         
-    case 2: /* BLOCK 2: PLAYER PEDS */
+    case 1: /* BLOCK 1: PLAYER PEDS */
         struct
         {      
             DWORD size;
@@ -179,7 +179,7 @@ struct
         } block <name="PlayerPeds">; 
         break;
 
-    case 3: /* BLOCK 3: GARAGES */
+    case 2: /* BLOCK 2: GARAGES */
         struct
         {
             DWORD size <comment="5484">;
@@ -270,7 +270,7 @@ struct
         } block <name="Garages">;
         break;
 
-    case 7: /* BLOCK 7: CRANES */
+    case 6: /* BLOCK 6: CRANES */
         struct
         {
             DWORD   size;
@@ -293,7 +293,7 @@ struct
         } block <name="Cranes">;
         break;
 
-    case 9: /* BLOCK 9: PHONES */
+    case 8: /* BLOCK 8: PHONE INFO */
         struct
         {
             DWORD size;
@@ -312,10 +312,10 @@ struct
                     BYTE    align[3];
                 } m_aPhone[50];
             } data;
-        } block <name="Phones">;
+        } block <name="PhoneInfo">;
         break;
 
-    case 10: /* BLOCK 10: RESTARTS */
+    case 9: /* BLOCK 9: RESTARTS */
         struct
         {    
             DWORD size;
@@ -346,7 +346,7 @@ struct
         } block <name="Restarts">;
         break;   
 
-    case 12: /* BLOCK 12: THE ZONES */
+    case 11: /* BLOCK 11: THE ZONES */
         struct
         {
             DWORD   size;
@@ -393,7 +393,7 @@ struct
         } block <name="Zones">;
         break;
     
-    case 13: /* BLOCK 13: GANGS */
+    case 12: /* BLOCK 12: GANGS */
 
         struct
         {
@@ -415,7 +415,7 @@ struct
         } block <name="Gangs">;
         break;
  
-    case 14: /* BLOCK 14: CAR GENERATORS */
+    case 13: /* BLOCK 13: CAR GENERATORS */
         struct
         {    
             DWORD size;
@@ -460,7 +460,7 @@ struct
         } block <name="CarGenerators">;
         break;        
 
-    case 17: /* BLOCK 17: PLAYER INFO */
+    case 16: /* BLOCK 16: PLAYER INFO */
         struct
         {    
             DWORD size;
@@ -482,8 +482,8 @@ struct
             } PlayerInfo;
         } block <name="PlayerInfo">;
         break;
+    case 20:
     case 21:
-    case 22:
         struct
         {
             FSkip(size);
