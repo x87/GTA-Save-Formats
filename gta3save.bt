@@ -372,7 +372,7 @@ struct
 
                     DWORD   m_dwCurrentZoneIndex;
                     ISLAND  m_eCurrentIsland;
-                    WORD    m_dwLastSearchZoneIndex <comment="index of last search invoked by a script">;
+                    WORD    m_dwFindIndex <comment="index of last search invoked by a script">;
                     BYTE    align[2];
                     Zone    m_aZone[50] <comment="from gta3.zon">;
                     struct
@@ -430,8 +430,8 @@ struct
                     {
                         DWORD   m_dwTotalCount;
                         DWORD   m_dwActiveCount;
-                        BYTE    _unknown;
-                        BYTE    _unknown;
+                        BYTE    _m_bProcessCounter;
+                        BYTE    _m_bGenerateEvenIfPlayerIsCloseCounter;
                         BYTE    align[2];
                     } data;
 
