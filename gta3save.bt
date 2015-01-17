@@ -436,7 +436,6 @@ struct
                         BYTE    _bGenerateEvenIfPlayerIsCloseCounter;
                         BYTE    align[2];
                     } data;
-
                     DWORD size <comment="11560">;
                     struct
                     {
@@ -455,8 +454,7 @@ struct
                         RwV3D   _unknown;
                         RwV3D   _unknown;
                         DWORD   _unknown;
-                    } aCarGenerator[160];
-                    
+                    } aCarGenerator[160];                    
                 } data;
             } data;
         } block <name="CarGenerators">;
@@ -507,9 +505,32 @@ struct
             DWORD size;
             struct
             {    
-                BYTE    unknown[200];
+                BYTE    _unknown[200];
             } data;
         } block <name="Streaming">;
+        break;
+
+    case 19: /* BLOCK 19: PED TYPES */
+        struct
+        {    
+            DWORD size <comment="744">;
+            struct
+            {    
+                CHAR    sig[4]<comment="PTP">;
+                DWORD   size;  
+                struct
+                {
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                } aPedType[23];
+            } data;
+        } block <name="PedTypes">;
         break;
 
     case 20:
