@@ -14,7 +14,9 @@ typedef struct RwV3D
 };
 
 enum <BYTE>  FLAG    {OFF,ON};
-enum <DWORD> ISLAND {Portland = 1, Staunton, Shoreside};
+enum <WORD>  FLAG_   {OFF_,ON_};
+enum <DWORD> FLAG__   {OFF__,ON__};
+enum <DWORD> LEVEL {Portland = 1, Staunton, Shoreside};
 
 local int n = 0;
 local int s = 0;
@@ -28,37 +30,37 @@ struct
     case 0: /* BLOCK 0: MISCELLANEOUS */
         struct
         {
-            wchar_t m_szTitle[24];
+            wchar_t szTitle[24];
             struct SYSTEMTIME
             {
-                WORD m_wYear, m_wMonth; 
-                enum<WORD> {SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY} m_eDayOfWeek; 
-                WORD m_wDay, m_wHour, m_wMinute, m_wSecond, m_wMilliseconds;
+                WORD nYear, nMonth; 
+                enum<WORD> {Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday} eDayOfWeek;
+                WORD nDay, nHour, nMinute, nSecond, nMilliseconds;
             } systemTime;
             DWORD   _611570;
-            ISLAND  m_eCurrentIsland;
-            RwV3D   m_vCameraPos;
-            UINT    m_dwMinuteLength;
-            UINT    m_dwWeatherTimer;
-            BYTE    m_bHours;
+            LEVEL   eCurrentLevel;
+            RwV3D   vCameraPos;
+            UINT    nMillisecondsPerGameMinute;
+            UINT    nLastClockTick <comment="WeatherTimer">;
+            BYTE    nHours;
             BYTE    align1[3];
-            BYTE    m_bMinutes;
+            BYTE    nMinutes;
             BYTE    align2[3];
             WORD    _unknown <comment="current pad?">;
             BYTE    align3[2];
-            UINT    m_dwGlobalTimer;
-            FLOAT   m_fGameSpeed;
-            FLOAT   _8E2CB4;
-            FLOAT   _8E2C4C;
-            UINT    m_dwFramesProcessed;
-            FLOAT   _5F76C8;
-            FLOAT   _5F76CC;
-            FLOAT   _5F76D0;
-            INT16   _95CCEC;
+            UINT    nTimeInMilliseconds <comment="GlobalTimer">;
+            FLOAT   fTimeScale <comment="opcode 015D">;
+            FLOAT   fTimerTimeStep;
+            FLOAT   fTimerTimeStepNonClipped;
+            UINT    nFrameCounter;
+            FLOAT   _fTimeStep <comment="unused (always 1.0)?">;
+            FLOAT   _fFramesPerUpdate <comment="unused (always 1.0)?">;
+            FLOAT   _fTimeScale <comment="unused (always 1.0)?">;
+            INT16   nOldWeatherType;
             BYTE    align4[2];
-            INT16   _95CC70;
+            INT16   nNewWeatherType;
             BYTE    align5[2];
-            INT16   _95CC80;
+            INT16   nForcedWeatherType;
             BYTE    align6[2];
             FLOAT   _8F2520;
             DWORD   _72BCB8;
@@ -79,76 +81,76 @@ struct
                 DWORD   size;
                 struct
                 {
-                    UINT    m_dwScriptVarsSize;
-                    DWORD   m_dwaScriptVars[m_dwScriptVarsSize / 4];
+                    UINT    nVariableSpaceSize;
+                    DWORD   aScriptVariable[nVariableSpaceSize / 4];
                     
                     DWORD   size <comment="968">;
                     struct
                     {
-                        DWORD   m_dwOnmissionVar <comment="$ONMISSION offset">;
+                        DWORD   nOnAMissionFlag <comment="offset in aScriptVariable">;
 
                         struct 
                         {
-                           DWORD    m_dwMissionFlag <comment="opcode 0181">;
-                           DWORD    m_dwBaseBrief <comment="opcode 0182">;
-                        } m_aContactInfo[16];
+                           DWORD    nMissionFlag <comment="opcode 0181">;
+                           DWORD    nBaseBrief <comment="opcode 0182">;
+                        } aContactInfo[16];
         
                         struct
                         {
                             INT32   _unknown[16];
                         } _unknown[4];
 
-                        DWORD   _942F98 <comment="unused (always 0)?">;
+                        DWORD   _nLastMissionPassedTime <comment="unused (always 0)?">;
 
                         struct
                         {
-                            DWORD   m_dwType;
-                            DWORD   m_dwBuildingHandle;
-                            DWORD   m_dwNewModel;
-                            DWORD   m_dwOldModel;
-                        } m_aStaticReplacement[25];
+                            DWORD   nType;
+                            DWORD   nBuildingHandle;
+                            DWORD   nNewModel;
+                            DWORD   nOldModel;
+                        } aBuildingSwap[25];
               
                         struct
                         {
-                            DWORD   m_dwType;
-                            DWORD   m_dwHandle;
-                        } m_aInvisibleObjects[20];
+                            DWORD   nType;
+                            DWORD   nHandle;
+                        } aInvisibilitySetting[20];
 
-                        BYTE    _95CD55 <comment="unused (always 1)?">;
+                        FLAG    bAlreadyRunningAMissionScript;
                         BYTE    align1[3];
-                        UINT    m_dwScmMainSize <comment="size of MAIN section in the main.scm">;
-                        UINT    m_dwLargestMissionSize;
-                        INT16   m_wMissionsCount;
+                        UINT    nMainScriptSize;
+                        UINT    nLargestMissionScriptSize;
+                        INT16   nNumberOfExclusiveMissionScripts;
                         BYTE    align2[2];
                     } data;
-                    DWORD   m_dwThreadsCount;
+                    DWORD   nNumActiveScripts;
                     struct
                     {
-                        DWORD   m_pNext;
-                        DWORD   m_pPrev;
-                        CHAR    m_szName[8];
-                        DWORD   m_dwCurrentIp;
-                        DWORD   m_dwReturnStack[4];
+                        DWORD   pNext;
+                        DWORD   pPrev;
+                        CHAR    szName[8];
+                        DWORD   nCurrentIp;
+                        DWORD   nReturnStack[4];
                         DWORD   _f24;
                         DWORD   _f28;
-                        WORD    m_wStackCounter;                
+                        WORD    nStackCounter;                
                         BYTE    align1[2];
-                        DWORD   m_dwLocals[16];
-                        DWORD   m_dwTimerA;
-                        DWORD   m_dwTimerB;
-                        BYTE    m_bIfResult;
+                        DWORD   nLocals[16];
+                        DWORD   nTimerA;
+                        DWORD   nTimerB;
+                        BYTE    bIfResult;
                         BYTE    _f79;
                         BYTE    _f7A;
                         BYTE    align2;
-                        DWORD   m_dwWakeTime;
-                        WORD    m_wIfNumber;
+                        DWORD   nWakeTime;
+                        WORD    nIfNumber;
                         BYTE    _f82;
                         BYTE    _f83;
                         BYTE    _f84;
                         BYTE    _f85;
                         BYTE    _f86;
                         BYTE    _f87;
-                    } m_aRunningScript[m_dwThreadsCount];
+                    } aRunningScript[nNumActiveScripts];
                 } data;
             } data;
         } block <name="Misc">;
@@ -159,7 +161,7 @@ struct
         {      
             DWORD size;
             struct {
-                DWORD m_dwPlayersCount;
+                DWORD nNumPlayers;
                 struct
                 {
                     DWORD   _unknown;
@@ -168,13 +170,13 @@ struct
                     struct
                     {
                         BYTE    _ped0[52];
-                        RwV3D   m_vPos;
-                        BYTE    ped1[1456];
+                        RwV3D   vPos;
+                        BYTE    _ped1[1456];
                     } CPed;
-                    DWORD   m_dwMaxWantedLevel;
-                    DWORD   m_dwMaxChaosLevel;
-                    CHAR    m_szModelName[24];     
-                } m_aPlayerPed[m_dwPlayersCount] <optimize=false>;        
+                    DWORD   nMaxWantedLevel;
+                    DWORD   nMaxChaosLevel;
+                    CHAR    szModelName[24];     
+                } aPlayerPed[nNumPlayers] <optimize=false>;        
             } data;                 
         } block <name="PlayerPeds">; 
         break;
@@ -185,34 +187,34 @@ struct
             DWORD size <comment="5484">;
             struct
             {
-                DWORD   m_dwGaragesCount;
-                DWORD   m_dwFreeBombs; 
-                DWORD   m_dwFreeResprays;
-                DWORD   _880E18 <comment="unused?">;
-                DWORD   _8F1B34;
-                DWORD   _941444;
-                DWORD   m_dwImportStatus[3]<format=binary>;
-                DWORD   m_dwTextGA21Timestamp <comment="time when 'GA_21' was last shown">;
+                DWORD   nNumGarages;
+                FLAG__  nBombsAreFree <comment="opcode 021D">; 
+                FLAG__  nRespraysAreFree <comment="opcode 0335">;
+                DWORD   _nCarsCollected <comment="unused?">;
+                DWORD   _nBankVansCollected;
+                DWORD   _nPoliceCarsCollected;
+                DWORD   nImportStatus[3]<format=binary>;
+                DWORD   nLastTimeHelpMessage <comment="'GA_21' text message">;
                 struct
                 {
                     struct
                     {
-                        DWORD   m_dwModelId;
-                        RwV3D   m_vPos;
-                        RwV3D   m_vRotation;
-                        DWORD   m_dwImmunities<format=binary>;
-                        BYTE    m_bPrimaryColor;
-                        BYTE    m_bSecondaryColor;
-                        BYTE    m_bRadioStation;
-                        BYTE    m_bModelVariationA;
-                        BYTE    m_bModelVariationB;
-                        BYTE    m_bBombType;
+                        DWORD   nModelId;
+                        RwV3D   vPos;
+                        RwV3D   vRotation;
+                        DWORD   nImmunities<format=binary>;
+                        BYTE    bPrimaryColor;
+                        BYTE    bSecondaryColor;
+                        BYTE    bRadioStation;
+                        BYTE    bModelVariationA;
+                        BYTE    bModelVariationB;
+                        BYTE    bBombType;
                         BYTE    align1[2];            
-                    } m_aStoredCar[6]<optimize=false>;
-                }  m_aSaveGarage[3]<comment="one garage per island">;
+                    } aStoredCar[6]<optimize=false>;
+                }  aCarsInSafeHouse[3]<comment="one safe house per level">;
                 struct
                 {
-                    BYTE    m_eType <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
+                    BYTE    eType <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
                     BYTE    _unknown;
                     BYTE    _unknown;
                     BYTE    _unknown;
@@ -230,12 +232,12 @@ struct
                     BYTE    _unknown;
                     BYTE    _unknown;
                     BYTE    align2;
-                    FLOAT   m_fX1;
-                    FLOAT   m_fX2;
-                    FLOAT   m_fY1;
-                    FLOAT   m_fY2;
-                    FLOAT   m_fZ1;
-                    FLOAT   m_fZ2;
+                    FLOAT   fX1;
+                    FLOAT   fX2;
+                    FLOAT   fY1;
+                    FLOAT   fY2;
+                    FLOAT   fZ1;
+                    FLOAT   fZ2;
                     FLOAT   _unknown;
                     FLOAT   _unknown;
                     FLOAT   _unknown;
@@ -248,8 +250,7 @@ struct
                     BYTE    _unknown;
                     BYTE    align3[3];
                     DWORD   _unknown;
-                    DWORD   _unknown;
-        
+                    DWORD   _unknown;        
                     DWORD   _unknown;
                     FLOAT   _unknown;
                     FLOAT   _unknown;
@@ -265,7 +266,7 @@ struct
                     BYTE    _unknown;
                     BYTE    _unknown;
                     BYTE    align4[2];
-                } m_aGarage[32];
+                } aGarage[32];
             } data;
         } block <name="Garages">;
         break;
@@ -276,11 +277,11 @@ struct
             DWORD   size;
             struct
             {
-                DWORD   m_dwCranesCount;
-                DWORD   m_dwMilitaryCarsCollected<format=binary, comment="opcode 03ec">;
+                DWORD   nNumCranes;
+                DWORD   nCarsCollectedMilitaryCrane<format=binary, comment="opcode 03ec">;
                 struct
                 {
-                    DWORD   m_dwStaticIndex <comment="index in static objects pool?">;
+                    DWORD   nStaticIndex <comment="index in static objects pool?">;
                     DWORD   _unknown;
                     DWORD   _unknown;
                     FLOAT   _float[25];
@@ -288,7 +289,7 @@ struct
                     DWORD   _unknown;
                     BYTE    _BYTE[7];
                     BYTE    align;
-                } m_aCrane[8] <optimize=false>;
+                } aCrane[8] <optimize=false>;
             } data;
         } block <name="Cranes">;
         break;
@@ -299,18 +300,18 @@ struct
             DWORD size;
             struct
             {
-                DWORD   m_dwPhonesCount;
-                DWORD   m_dwActivePhones;
+                DWORD   nNumPhones;
+                DWORD   nNumActivePhones;
                 struct
                 {
-                    RwV3D   m_vPos;
-                    UINT32  m_pszText[6] <comment="pointers to text assigned with opcodes like 0388">;
+                    RwV3D   vPos;
+                    UINT32  pszText[6] <comment="pointers to text assigned with opcodes like 0388">;
                     DWORD   _unknown;
-                    DWORD   m_dwStaticIndex <comment="index in static objects pool?">;
-                    enum<DWORD>{eIdle=3,eRinging=9}   m_eStatus;
+                    DWORD   nStaticIndex <comment="index in static objects pool?">;
+                    enum<DWORD>{eIdle=3,eRinging=9}   eStatus;
                     BYTE    _unknown;
                     BYTE    align[3];
-                } m_aPhone[50];
+                } aPhoneInfo[50];
             } data;
         } block <name="PhoneInfo">;
         break;
@@ -325,22 +326,22 @@ struct
                 DWORD   size;  
                 struct
                 {
-                    typedef struct RestartPoint
+                    typedef struct Restart
                     {
-                        RwV3D m_vPos;
-                        FLOAT m_fAngle;
+                        RwV3D vPos;
+                        FLOAT fAngle;
                     };
-                    RestartPoint    m_vWasted[8];
-                    RestartPoint    m_vbusted[8];
-                    WORD    m_wWastedRestartsCount;
-                    WORD    m_wBustedRestartsCount;
-                    FLAG    m_bOverrideNextRestart <comment="opcodes 016E, 0255">;
+                    Restart    aHospitalRestart[8];
+                    Restart    aPoliceRestart[8];
+                    WORD    nNumHospitalRestarts;
+                    WORD    nNumPoliceRestarts;
+                    FLAG    bOverrideNextRestart <comment="opcodes 016E, 0255">;
                     BYTE    align[3];
-                    RestartPoint m_vOverridenRestartPoint <comment="opcodes 016E, 0255">;
-                    FLAG    m_bFadeInAfterNextDeath <comment="opcode 040F">;
-                    FLAG    m_bFadeInAfterNextArrest <comment="opcode 040E">;
-                    FLAG    m_bOverrideHospitalLevel <comment="opcode 041F">;
-                    FLAG    m_bOverridePoliceLevel <comment="opcode 0420">;
+                    Restart vOverrideRestart <comment="opcodes 016E, 0255">;
+                    FLAG    bFadeInAfterNextDeath <comment="opcode 040F">;
+                    FLAG    bFadeInAfterNextArrest <comment="opcode 040E">;
+                    FLAG    bOverrideHospitalLevel <comment="opcode 041F">;
+                    FLAG    bOverridePoliceLevel <comment="opcode 0420">;
                 } data;
             } data;
         } block <name="Restarts">;
@@ -358,36 +359,36 @@ struct
                 {
                     typedef struct
                     {
-                        CHAR    m_szName[8];
-                        RwV3D   m_vCoordA;
-                        RwV3D   m_vCoordB;
-                        enum<DWORD>{}   m_eZoneType <comment="0, 1, 2 or 3 for MapZone">;
-                        ISLAND  m_eCurrentIsland;
-                        WORD    m_wZoneInfoIdNight;
-                        WORD    m_wZoneInfoIdDay;
+                        CHAR    szName[8];
+                        RwV3D   vCoordA;
+                        RwV3D   vCoordB;
+                        enum<DWORD>{}   eZoneType <comment="0, 1, 2 or 3 for MapZone">;
+                        LEVEL   eZoneLevel;
+                        WORD    nZoneInfoIdNight;
+                        WORD    nZoneInfoIdDay;
                         INT32   unknown <comment="neighbour/inner/outer? zone index">;
                         INT32   unknown <comment="neighbour/inner/outer? zone index">;
                         INT32   unknown <comment="neighbour/inner/outer? zone index">;
                     } Zone;
 
-                    DWORD   m_dwCurrentZoneIndex;
-                    ISLAND  m_eCurrentIsland;
-                    WORD    m_dwFindIndex <comment="index of last search invoked by a script">;
+                    DWORD   nCurrentZoneIndex;
+                    LEVEL   eCurrentLevel;
+                    WORD    nFindIndex <comment="index of last search invoked by a script">;
                     BYTE    align[2];
-                    Zone    m_aZone[50] <comment="from gta3.zon">;
+                    Zone    aNavigationZone[50] <comment="from gta3.zon">;
                     struct
                     {
-                        WORD    m_waDensity[29];
-                    } m_aZoneInfo[100] <comment="day/night pairs for each Zone">;
-                    WORD    m_wZoneCount;
-                    WORD    m_wZoneInfoCount;
-                    Zone    m_aMapZone[25] <comment="from map.zon">;
+                        WORD    aDensity[29];
+                    } aZoneInfo[100] <comment="day/night pairs for each Zone">;
+                    WORD    nTotalNumberOfNavigationZones;
+                    WORD    nTotalNumberOfZoneInfos;
+                    Zone    aMapZone[25] <comment="from map.zon">;
                     struct
                     {
-                        INT16    m_wZoneId;
-                    } m_aAudioZone[36];
-                    WORD    m_wMapZoneCount;
-                    WORD    m_wAudioZoneCount;
+                        INT16    nZoneId;
+                    } aAudioZone[36];
+                    WORD    nTotalNumberOfMapZones;
+                    WORD    nNumberOfAudioZones;
                 } data;
             } data;
         } block <name="Zones">;
@@ -404,13 +405,13 @@ struct
                 DWORD   size;
                 struct
                 {
-                    int     m_dwCarModel;
-                    BYTE    m_bPedModelOverride <comment="opcode 0410">;
+                    int     nCarModel;
+                    BYTE    bPedModelOverride <comment="opcode 0410">;
                     BYTE    _unknown <comment="unused/align?">;
                     WORD    _unknown <comment="unused/align?">;
-                    DWORD   m_dwPrimaryWeapon;
-                    DWORD   m_dwSecondaryWeapon;
-                } m_aGang[9];
+                    DWORD   nPrimaryWeapon;
+                    DWORD   nSecondaryWeapon;
+                } aGang[9];
             } data;
         } block <name="Gangs">;
         break;
@@ -428,32 +429,32 @@ struct
                     DWORD size <comment="12">;
                     struct
                     {
-                        DWORD   m_dwTotalCount;
-                        DWORD   m_dwActiveCount;
-                        BYTE    _m_bProcessCounter;
-                        BYTE    _m_bGenerateEvenIfPlayerIsCloseCounter;
+                        DWORD   nNumOfCarGenerators;
+                        DWORD   nCurrentActiveCount;
+                        BYTE    _bProcessCounter;
+                        BYTE    _bGenerateEvenIfPlayerIsCloseCounter;
                         BYTE    align[2];
                     } data;
 
                     DWORD size <comment="11560">;
                     struct
                     {
-                        DWORD   m_dwModelId;
-                        RwV3D   m_vPos;
-                        FLOAT   m_fAngle;
-                        INT16   m_wPrimaryColor, m_wSecondaryColor;
-                        FLAG    m_bForceSpawn;
-                        BYTE    m_bAlarm;
-                        BYTE    m_bDoorLock;
+                        DWORD   nModelId;
+                        RwV3D   vPos;
+                        FLOAT   fAngle;
+                        INT16   nPrimaryColor, nSecondaryColor;
+                        FLAG    bForceSpawn;
+                        BYTE    bAlarm;
+                        BYTE    bDoorLock;
                         BYTE    align;
-                        WORD    m_wMinDelay, m_wMaxDelay;
-                        DWORD   m_dwTime;
+                        WORD    nMinDelay, nMaxDelay;
+                        DWORD   nTime;
                         int     _unknown;
                         int     _unknown;
                         RwV3D   _unknown;
                         RwV3D   _unknown;
                         DWORD   _unknown;
-                    } m_aCarGenerator[160];
+                    } aCarGenerator[160];
                     
                 } data;
             } data;
@@ -466,18 +467,18 @@ struct
             DWORD size;
             struct
             {
-                DWORD   m_dwMoney;
+                DWORD   nMoney;
                 BYTE    _fD8;
                 DWORD   _fDC;
                 WORD    _fFC;
                 FLOAT   _f100;
-                DWORD   m_dwMoneyOnScreen;
-                DWORD   m_dwHiddenPackagesPickedUp; 
-                DWORD   m_dwHiddenPackagesCount <comment="opcode 02ED">;
-                FLAG    m_bPlayerNeverGetsTired <comment="opcode 0330">;
-                FLAG    m_bPlayerFastReload <comment="opcode 0331">;
-                FLAG    m_bGetOutOfJailFree <comment="opcode 0413">;
-                FLAG    m_bFreeHealthCare <comment="opcode 0414">;
+                DWORD   nMoneyOnScreen;
+                DWORD   nHiddenPackagesPickedUp; 
+                DWORD   nHiddenPackagesCount <comment="opcode 02ED">;
+                FLAG    bPlayerNeverGetsTired <comment="opcode 0330">;
+                FLAG    bPlayerFastReload <comment="opcode 0331">;
+                FLAG    bGetOutOfJailFree <comment="opcode 0413">;
+                FLAG    bFreeHealthCare <comment="opcode 0414">;
                 BYTE    unknown[70];
             } PlayerInfo;
         } block <name="PlayerInfo">;
@@ -497,12 +498,11 @@ struct
     }
     if (sizeof(block) < size) BYTE align[size-sizeof(block)];
 } block[22]<optimize=false,open=true>;
-string checkSum(int dwOldSum){
-    UINT dwNewSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
-    if (dwNewSum != dwOldSum)
-    WriteUInt(FileSize()-4, dwNewSum);
+string checkSum(int nOldSum){
+    UINT nNewSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
+    if (dwNewSum != nOldSum) WriteUInt(FileSize()-4, nNewSum);
     string s;
-    SPrintf( s, "%d", (UINT)dwNewSum);
+    SPrintf( s, "%d", (UINT) nNewSum);
     return s;
 };
 DWORD checksum<read=checkSum>;
