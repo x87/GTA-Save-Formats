@@ -15,8 +15,9 @@ typedef struct RwV3D
 
 enum <BYTE>  FLAG    {OFF,ON};
 enum <WORD>  FLAG_   {OFF_,ON_};
-enum <DWORD> FLAG__   {OFF__,ON__};
-enum <DWORD> LEVEL {Portland = 1, Staunton, Shoreside};
+enum <DWORD> FLAG__  {OFF__,ON__};
+enum <DWORD> LEVEL   {Portland = 1, Staunton, Shoreside};
+enum <WORD>  DAY     {Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday};
 
 local int n = 0;
 local int s = 0;
@@ -34,7 +35,7 @@ struct
             struct SYSTEMTIME
             {
                 WORD nYear, nMonth; 
-                enum<WORD> {Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday} eDayOfWeek;
+                DAY  eDayOfWeek;
                 WORD nDay, nHour, nMinute, nSecond, nMilliseconds;
             } systemTime;
             DWORD   _611570;
@@ -483,6 +484,23 @@ struct
             } PlayerInfo;
         } block <name="PlayerInfo">;
         break;
+
+    case 17: /* BLOCK 17: STATS */
+        struct
+        {    
+            DWORD size;
+            struct
+            {    
+                DWORD size;
+                struct
+                {    
+                    DWORD   stat[102];
+                    CHAR    szLastMissionPassedName[8] <comment="GXT key">;
+                } data;
+            } data;
+        } block <name="Stats">;
+        break;
+
     case 20:
     case 21:
         struct
@@ -500,7 +518,7 @@ struct
 } block[22]<optimize=false,open=true>;
 string checkSum(int nOldSum){
     UINT nNewSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
-    if (dwNewSum != nOldSum) WriteUInt(FileSize()-4, nNewSum);
+    if (nNewSum != nOldSum) WriteUInt(FileSize()-4, nNewSum);
     string s;
     SPrintf( s, "%d", (UINT) nNewSum);
     return s;
