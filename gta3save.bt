@@ -501,6 +501,17 @@ struct
         } block <name="Stats">;
         break;
 
+    case 18: /* BLOCK 18: STREAMING */
+        struct
+        {    
+            DWORD size;
+            struct
+            {    
+                BYTE    unknown[200];
+            } data;
+        } block <name="Streaming">;
+        break;
+
     case 20:
     case 21:
         struct
