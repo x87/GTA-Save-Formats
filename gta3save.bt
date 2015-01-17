@@ -272,6 +272,41 @@ struct
         } block <name="Garages">;
         break;
 
+    case 4: /* BLOCK 4: OBJECTS */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                DWORD   nNumObjects;
+                struct
+                {
+                    WORD    nModelId;
+                    DWORD   nObjectRef;
+                    RwV3D   pos;
+                    BYTE    _unknown1[12] <comment="compressed matrix">;
+                    FLOAT   _unknown;
+                    RwV3D   _unknown;
+                    BYTE    _unknown2[12] <comment="compressed matrix">;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    FLOAT   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                } Object[nNumObjects] <optimize=false>;
+            } data;
+        } block <name="Objects">;
+        break;
+
     case 6: /* BLOCK 6: CRANES */
         struct
         {
