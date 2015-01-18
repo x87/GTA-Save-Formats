@@ -63,16 +63,11 @@ struct
             BYTE    align5[2];
             INT16   nForcedWeatherType;
             BYTE    align6[2];
-            FLOAT   _8F2520;
-            DWORD   _72BCB8;
-            DWORD   _72BCBC;
-            DWORD   _72BCC0;
-            DWORD   _72BCC4;
-            DWORD   _72BCC8;
-            DWORD   _72BCCC;
-            DWORD   _8F626C;
-            FLOAT   _6FADD0;
-            FLOAT   _6FAE58;
+            FLOAT   _fWeatherInterpolationValue;
+            BYTE    _szCompileTime[24] <comment="unused?">;
+            DWORD   _WeatherTypeInList;
+            FLOAT   _6FADD0 <comment="camera related">;
+            FLOAT   _6FAE58 <comment="camera related">;
             
             DWORD size;
             struct
