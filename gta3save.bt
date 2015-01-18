@@ -402,9 +402,9 @@ struct
                         LEVEL   eZoneLevel;
                         WORD    nZoneInfoIdNight;
                         WORD    nZoneInfoIdDay;
-                        INT32   unknown <comment="neighbour/inner/outer? zone index">;
-                        INT32   unknown <comment="neighbour/inner/outer? zone index">;
-                        INT32   unknown <comment="neighbour/inner/outer? zone index">;
+                        INT32   nChildZoneIndex;
+                        INT32   nParentZoneIndex;
+                        INT32   nSiblingZoneIndex;
                     } Zone;
 
                     DWORD   nCurrentZoneIndex;
