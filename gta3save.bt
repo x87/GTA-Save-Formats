@@ -39,7 +39,7 @@ struct
             wchar_t szTitle[24];
             struct SYSTEMTIME
             {
-                WORD nYear, nMonth; 
+                WORD nYear, nMonth;
                 DAY  eDayOfWeek;
                 WORD nDay, nHour, nMinute, nSecond, nMilliseconds;
             } systemTime;
@@ -48,11 +48,11 @@ struct
             RwV3D   vCameraPos;
             UINT    nMillisecondsPerGameMinute;
             UINT    nLastClockTick <comment="WeatherTimer">;
-            BYTE    nHours; 
+            BYTE    nHours;
             align(3);
-            BYTE    nMinutes; 
+            BYTE    nMinutes;
             align(3);
-            WORD    _nCurrentPadMode; 
+            WORD    _nCurrentPadMode;
             align(2);
             UINT    nTimeInMilliseconds <comment="GlobalTimer">;
             FLOAT   fTimeScale <comment="opcode 015D">;
@@ -62,37 +62,40 @@ struct
             FLOAT   _fTimeStep <comment="unused (always 1.0)?">;
             FLOAT   _fFramesPerUpdate <comment="unused (always 1.0)?">;
             FLOAT   _fTimeScale <comment="unused (always 1.0)?">;
-            INT16   nOldWeatherType; FSkip(2);
-            INT16   nNewWeatherType; FSkip(2);
-            INT16   nForcedWeatherType; FSkip(2);
+            INT16   nOldWeatherType;
+            align(2);
+            INT16   nNewWeatherType;
+            align(2);
+            INT16   nForcedWeatherType;
+            align(2);
             FLOAT   _fWeatherInterpolationValue;
             BYTE    _szCompileTime[24] <comment="unused?">;
             DWORD   _nWeatherTypeInList;
             FLOAT   _unknown <comment="camera related">;
             FLOAT   _unknown <comment="camera related">;
-            
+
             DWORD size;
             struct
             {
                 CHAR sig[4] <comment="SCR">;
-                
+
                 DWORD   size;
                 struct
                 {
                     UINT    nVariableSpaceSize;
                     DWORD   aScriptVariable[nVariableSpaceSize / 4];
-                    
+
                     DWORD   size <comment="968">;
                     struct
                     {
                         DWORD   nOnAMissionFlag <comment="offset in aScriptVariable">;
 
-                        struct 
+                        struct
                         {
                            DWORD    nMissionFlag <comment="opcode 0181">;
                            DWORD    nBaseBrief <comment="opcode 0182">;
                         } aContactInfo[16];
-        
+
                         struct
                         {
                             INT32   _unknown[16];
@@ -107,7 +110,7 @@ struct
                             DWORD   nNewModel;
                             DWORD   nOldModel;
                         } aBuildingSwap[25];
-              
+
                         struct
                         {
                             DWORD   nType;
@@ -131,7 +134,7 @@ struct
                         DWORD   nReturnStack[4];
                         DWORD   _f24;
                         DWORD   _f28;
-                        WORD    nStackCounter;                
+                        WORD    nStackCounter;
                         align(2);
                         DWORD   nLocals[16];
                         DWORD   nTimerA;
@@ -153,17 +156,17 @@ struct
             } data;
         } block <name="Misc">;
         break;
-        
+
     case 1: /* BLOCK 1: PLAYER PEDS */
         struct
-        {      
+        {
             DWORD size;
             struct {
                 DWORD nNumPlayers;
                 struct
                 {
                     DWORD   _unknown;
-                    WORD    _unknown;        
+                    WORD    _unknown;
                     DWORD   _unknown <comment="ped_ref">;
                     struct
                     {
@@ -173,10 +176,10 @@ struct
                     } CPed;
                     DWORD   nMaxWantedLevel;
                     DWORD   nMaxChaosLevel;
-                    CHAR    szModelName[24];     
-                } aPlayerPed[nNumPlayers] <optimize=false>;        
-            } data;                 
-        } block <name="PlayerPeds">; 
+                    CHAR    szModelName[24];
+                } aPlayerPed[nNumPlayers] <optimize=false>;
+            } data;
+        } block <name="PlayerPeds">;
         break;
 
     case 2: /* BLOCK 2: GARAGES */
@@ -186,7 +189,7 @@ struct
             struct
             {
                 DWORD   nNumGarages;
-                FLAG__  nBombsAreFree <comment="opcode 021D">; 
+                FLAG__  nBombsAreFree <comment="opcode 021D">;
                 FLAG__  nRespraysAreFree <comment="opcode 0335">;
                 DWORD   _nCarsCollected <comment="unused?">;
                 DWORD   _nBankVansCollected;
@@ -207,7 +210,7 @@ struct
                         BYTE    bModelVariationA;
                         BYTE    bModelVariationB;
                         BYTE    bBombType;
-                        align(2);           
+                        align(2);
                     } aStoredCar[6]<optimize=false>;
                 }  aCarsInSafeHouse[3]<optimize=false,comment="one safe house per level">;
                 struct
@@ -219,7 +222,7 @@ struct
                     BYTE    _unknown;
                     BYTE    _unknown;
                     align(2);
-                    DWORD   _unknown;    
+                    DWORD   _unknown;
                     DWORD   _unknown <comment="pointer">;
                     DWORD   _unknown <comment="pointer">;
                     BYTE    _unknown;
@@ -248,7 +251,7 @@ struct
                     BYTE    _unknown;
                     align(3);
                     DWORD   _unknown;
-                    DWORD   _unknown;        
+                    DWORD   _unknown;
                     DWORD   _unknown;
                     FLOAT   _unknown;
                     FLOAT   _unknown;
@@ -351,12 +354,12 @@ struct
 
     case 9: /* BLOCK 9: RESTARTS */
         struct
-        {    
+        {
             DWORD size;
             struct
             {
                 CHAR    sig[4]<comment="RST">;
-                DWORD   size;  
+                DWORD   size;
                 struct
                 {
                     typedef struct Restart
@@ -378,7 +381,7 @@ struct
                 } data;
             } data;
         } block <name="Restarts">;
-        break;   
+        break;
 
     case 11: /* BLOCK 11: THE ZONES */
         struct
@@ -426,7 +429,7 @@ struct
             } data;
         } block <name="Zones">;
         break;
-    
+
     case 12: /* BLOCK 12: GANGS */
 
         struct
@@ -447,15 +450,15 @@ struct
             } data;
         } block <name="Gangs">;
         break;
- 
+
     case 13: /* BLOCK 13: CAR GENERATORS */
         struct
-        {    
+        {
             DWORD size;
             struct
             {
                 CHAR    sig[4]<comment="CGN">;
-                DWORD   size;  
+                DWORD   size;
                 struct
                 {
                     DWORD size <comment="12">;
@@ -485,15 +488,15 @@ struct
                         RwV3D   _unknown;
                         RwV3D   _unknown;
                         DWORD   _unknown;
-                    } aCarGenerator[160]<optimize=false>;                    
+                    } aCarGenerator[160]<optimize=false>;
                 } data;
             } data;
         } block <name="CarGenerators">;
-        break;        
+        break;
 
     case 16: /* BLOCK 16: PLAYER INFO */
         struct
-        {    
+        {
             DWORD size;
             struct
             {
@@ -503,7 +506,7 @@ struct
                 WORD    _fFC;
                 FLOAT   _f100;
                 DWORD   nMoneyOnScreen;
-                DWORD   nHiddenPackagesPickedUp; 
+                DWORD   nHiddenPackagesPickedUp;
                 DWORD   nHiddenPackagesCount <comment="opcode 02ED">;
                 FLAG    bPlayerNeverGetsTired <comment="opcode 0330">;
                 FLAG    bPlayerFastReload <comment="opcode 0331">;
@@ -516,13 +519,13 @@ struct
 
     case 17: /* BLOCK 17: STATS */
         struct
-        {    
+        {
             DWORD size;
             struct
-            {    
+            {
                 DWORD size;
                 struct
-                {    
+                {
                     DWORD   stat[102];
                     CHAR    szLastMissionPassedName[8] <comment="GXT key">;
                 } data;
@@ -532,10 +535,10 @@ struct
 
     case 18: /* BLOCK 18: STREAMING */
         struct
-        {    
+        {
             DWORD size;
             struct
-            {    
+            {
                 BYTE    _unknown[200];
             } data;
         } block <name="Streaming">;
@@ -543,12 +546,12 @@ struct
 
     case 19: /* BLOCK 19: PED TYPES */
         struct
-        {    
+        {
             DWORD size <comment="744">;
             struct
-            {    
+            {
                 CHAR    sig[4]<comment="PTP">;
-                DWORD   size;  
+                DWORD   size;
                 struct
                 {
                     DWORD   _unknown;
@@ -568,13 +571,13 @@ struct
     case 21:
         struct
         {
-            FSkip(size);
+            align(size);
         } block <name="padding">;
         break;
     default:
         struct
         {
-            FSkip(size);
+            align(size);
         } block;
     }
     if (sizeof(block) < size) align(size-sizeof(block));
