@@ -13,6 +13,11 @@ typedef struct RwV3D
   FLOAT X, Y, Z;
 };
 
+void align(int n)
+{
+    FSkip(n);
+};
+
 enum <BYTE>  FLAG    {OFF,ON};
 enum <WORD>  FLAG_   {OFF_,ON_};
 enum <DWORD> FLAG__  {OFF__,ON__};
@@ -38,17 +43,17 @@ struct
                 DAY  eDayOfWeek;
                 WORD nDay, nHour, nMinute, nSecond, nMilliseconds;
             } systemTime;
-            DWORD   _611570;
+            DWORD   _unknown;
             LEVEL   eCurrentLevel;
             RwV3D   vCameraPos;
             UINT    nMillisecondsPerGameMinute;
             UINT    nLastClockTick <comment="WeatherTimer">;
-            BYTE    nHours;
-            BYTE    align1[3];
-            BYTE    nMinutes;
-            BYTE    align2[3];
-            WORD    _unknown <comment="current pad?">;
-            BYTE    align3[2];
+            BYTE    nHours; 
+            align(3);
+            BYTE    nMinutes; 
+            align(3);
+            WORD    _nCurrentPadMode; 
+            align(2);
             UINT    nTimeInMilliseconds <comment="GlobalTimer">;
             FLOAT   fTimeScale <comment="opcode 015D">;
             FLOAT   fTimerTimeStep;
@@ -57,17 +62,14 @@ struct
             FLOAT   _fTimeStep <comment="unused (always 1.0)?">;
             FLOAT   _fFramesPerUpdate <comment="unused (always 1.0)?">;
             FLOAT   _fTimeScale <comment="unused (always 1.0)?">;
-            INT16   nOldWeatherType;
-            BYTE    align4[2];
-            INT16   nNewWeatherType;
-            BYTE    align5[2];
-            INT16   nForcedWeatherType;
-            BYTE    align6[2];
+            INT16   nOldWeatherType; FSkip(2);
+            INT16   nNewWeatherType; FSkip(2);
+            INT16   nForcedWeatherType; FSkip(2);
             FLOAT   _fWeatherInterpolationValue;
             BYTE    _szCompileTime[24] <comment="unused?">;
-            DWORD   _WeatherTypeInList;
-            FLOAT   _6FADD0 <comment="camera related">;
-            FLOAT   _6FAE58 <comment="camera related">;
+            DWORD   _nWeatherTypeInList;
+            FLOAT   _unknown <comment="camera related">;
+            FLOAT   _unknown <comment="camera related">;
             
             DWORD size;
             struct
@@ -113,11 +115,11 @@ struct
                         } aInvisibilitySetting[20];
 
                         FLAG    bAlreadyRunningAMissionScript;
-                        BYTE    align1[3];
+                        align(3);
                         UINT    nMainScriptSize;
                         UINT    nLargestMissionScriptSize;
                         INT16   nNumberOfExclusiveMissionScripts;
-                        BYTE    align2[2];
+                        align(2);
                     } data;
                     DWORD   nNumActiveScripts;
                     struct
@@ -130,14 +132,14 @@ struct
                         DWORD   _f24;
                         DWORD   _f28;
                         WORD    nStackCounter;                
-                        BYTE    align1[2];
+                        align(2);
                         DWORD   nLocals[16];
                         DWORD   nTimerA;
                         DWORD   nTimerB;
                         BYTE    bIfResult;
                         BYTE    _f79;
                         BYTE    _f7A;
-                        BYTE    align2;
+                        align(1);
                         DWORD   nWakeTime;
                         WORD    nIfNumber;
                         BYTE    _f82;
@@ -146,7 +148,7 @@ struct
                         BYTE    _f85;
                         BYTE    _f86;
                         BYTE    _f87;
-                    } aRunningScript[nNumActiveScripts];
+                    } aRunningScript[nNumActiveScripts]<optimize=false>;
                 } data;
             } data;
         } block <name="Misc">;
@@ -205,9 +207,9 @@ struct
                         BYTE    bModelVariationA;
                         BYTE    bModelVariationB;
                         BYTE    bBombType;
-                        BYTE    align1[2];            
+                        align(2);           
                     } aStoredCar[6]<optimize=false>;
-                }  aCarsInSafeHouse[3]<comment="one safe house per level">;
+                }  aCarsInSafeHouse[3]<optimize=false,comment="one safe house per level">;
                 struct
                 {
                     BYTE    eType <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
@@ -216,7 +218,7 @@ struct
                     BYTE    _unknown;
                     BYTE    _unknown;
                     BYTE    _unknown;
-                    BYTE    align1[2];
+                    align(2);
                     DWORD   _unknown;    
                     DWORD   _unknown <comment="pointer">;
                     DWORD   _unknown <comment="pointer">;
@@ -227,7 +229,7 @@ struct
                     BYTE    _unknown;
                     BYTE    _unknown;
                     BYTE    _unknown;
-                    BYTE    align2;
+                    align(1);
                     FLOAT   fX1;
                     FLOAT   fX2;
                     FLOAT   fY1;
@@ -244,7 +246,7 @@ struct
                     FLOAT   _unknown;
                     DWORD   _unknown;
                     BYTE    _unknown;
-                    BYTE    align3[3];
+                    align(3);
                     DWORD   _unknown;
                     DWORD   _unknown;        
                     DWORD   _unknown;
@@ -261,8 +263,8 @@ struct
                     BYTE    _unknown;
                     BYTE    _unknown;
                     BYTE    _unknown;
-                    BYTE    align4[2];
-                } aGarage[32];
+                    align(2);
+                } aGarage[32]<optimize=false>;
             } data;
         } block <name="Garages">;
         break;
@@ -319,7 +321,7 @@ struct
                     DWORD   _unknown;
                     DWORD   _unknown;
                     BYTE    _BYTE[7];
-                    BYTE    align;
+                    align(1);
                 } aCrane[8] <optimize=false>;
             } data;
         } block <name="Cranes">;
@@ -341,8 +343,8 @@ struct
                     DWORD   nStaticIndex <comment="index in static objects pool?">;
                     enum<DWORD>{eIdle=3,eRinging=9}   eStatus;
                     BYTE    _unknown;
-                    BYTE    align[3];
-                } aPhoneInfo[50];
+                    align(3);
+                } aPhoneInfo[50]<optimize=false>;
             } data;
         } block <name="PhoneInfo">;
         break;
@@ -367,7 +369,7 @@ struct
                     WORD    nNumHospitalRestarts;
                     WORD    nNumPoliceRestarts;
                     FLAG    bOverrideNextRestart <comment="opcodes 016E, 0255">;
-                    BYTE    align[3];
+                    align(3);
                     Restart vOverrideRestart <comment="opcodes 016E, 0255">;
                     FLAG    bFadeInAfterNextDeath <comment="opcode 040F">;
                     FLAG    bFadeInAfterNextArrest <comment="opcode 040E">;
@@ -405,7 +407,7 @@ struct
                     DWORD   nCurrentZoneIndex;
                     LEVEL   eCurrentLevel;
                     WORD    nFindIndex <comment="index of last search invoked by a script">;
-                    BYTE    align[2];
+                    align(2);
                     Zone    aNavigationZone[50] <comment="from gta3.zon">;
                     struct
                     {
@@ -438,11 +440,10 @@ struct
                 {
                     int     nCarModel;
                     BYTE    bPedModelOverride <comment="opcode 0410">;
-                    BYTE    _unknown <comment="unused/align?">;
-                    WORD    _unknown <comment="unused/align?">;
+                    align(3);
                     DWORD   nPrimaryWeapon;
                     DWORD   nSecondaryWeapon;
-                } aGang[9];
+                } aGang[9]<optimize=false>;
             } data;
         } block <name="Gangs">;
         break;
@@ -464,7 +465,7 @@ struct
                         DWORD   nCurrentActiveCount;
                         BYTE    _bProcessCounter;
                         BYTE    _bGenerateEvenIfPlayerIsCloseCounter;
-                        BYTE    align[2];
+                        align(2);
                     } data;
                     DWORD size <comment="11560">;
                     struct
@@ -476,7 +477,7 @@ struct
                         FLAG    bForceSpawn;
                         BYTE    bAlarm;
                         BYTE    bDoorLock;
-                        BYTE    align;
+                        align(1);
                         WORD    nMinDelay, nMaxDelay;
                         DWORD   nTime;
                         int     _unknown;
@@ -484,7 +485,7 @@ struct
                         RwV3D   _unknown;
                         RwV3D   _unknown;
                         DWORD   _unknown;
-                    } aCarGenerator[160];                    
+                    } aCarGenerator[160]<optimize=false>;                    
                 } data;
             } data;
         } block <name="CarGenerators">;
@@ -576,7 +577,7 @@ struct
             FSkip(size);
         } block;
     }
-    if (sizeof(block) < size) BYTE align[size-sizeof(block)];
+    if (sizeof(block) < size) align(size-sizeof(block));
 } block[22]<optimize=false,open=true>;
 string checkSum(int nOldSum){
     UINT nNewSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
