@@ -383,6 +383,37 @@ struct
         } block <name="Restarts">;
         break;
 
+    case 10: /* BLOCK 10: RADAR */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                CHAR    sig[4]<comment="RDR">;
+                DWORD   size;
+                struct
+                {
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    WORD    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    FLOAT   _unknown;
+                    WORD    _unknown;
+                    WORD    _unknown;
+                    WORD    _unknown;
+                    align(2);
+                } RadarBlip[32];
+            } data;
+        } block <name="Radar">;
+        break;    
+
     case 11: /* BLOCK 11: THE ZONES */
         struct
         {
