@@ -211,8 +211,8 @@ struct
                         BYTE    bModelVariationB;
                         BYTE    bBombType;
                         align(2);
-                    } aStoredCar[6]<optimize=false>;
-                }  aCarsInSafeHouse[3]<optimize=false,comment="one safe house per level">;
+                    } aStoredCar[3]<optimize=false, comment="portland, staunton, shoreside">;
+                }  aSaveGarageSlot[6]<optimize=false>;
                 struct
                 {
                     BYTE    eType <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
@@ -393,20 +393,18 @@ struct
                 DWORD   size;
                 struct
                 {
-                    DWORD   _unknown;
-                    DWORD   _unknown;
-                    DWORD   _unknown;
+                    DWORD   nColour <comment="opcode 0165">;
+                    DWORD   nType;
+                    DWORD   nEntityHandle <comment="car/actor/object handle">;
                     FLOAT   _fX;
                     FLOAT   _fY;
-                    FLOAT   _fX;
-                    FLOAT   _fY;
-                    FLOAT   _fZ;
-                    WORD    _unknown;
+                    RwV3D   vPos;
+                    WORD    _Index;
+                    BYTE    nBrightness <comment="opcode 0166">;
                     BYTE    _unknown;
-                    BYTE    _unknown;
-                    FLOAT   _fScale;
-                    WORD    _unknown;
-                    WORD    _unknown;
+                    FLOAT   _unknown;
+                    WORD    nScale <comment="opcode 0168">;
+                    WORD    nDisplay <comment="opcode 018B">;
                     enum<WORD> {radar_default,radar_asuka,radar_bomb,radar_cat,radar_centre,radar_copcar,radar_don,radar_eight,radar_el,radar_ice,radar_joey,radar_kenji,radar_liz,radar_luigi,radar_north,radar_ray,radar_sal,radar_save,radar_spray,radar_tony,radar_weapon} eBlipSprite;
                     align(2);
                 } RadarBlip[32];
