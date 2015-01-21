@@ -589,7 +589,7 @@ struct
                     FLOAT   _unknown;
                     FLOAT   _unknown;
                     FLOAT   _unknown;
-                    DWORD   _unknown;
+                    DWORD   _nThreat <format=binary,comment="opcodes 03F1, 03F2, 042A">;
                     DWORD   _unknown;
                 } aPedType[23];
             } data;
