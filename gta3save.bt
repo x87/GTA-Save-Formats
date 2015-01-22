@@ -407,7 +407,7 @@ struct
                     WORD    nDisplay <comment="opcode 018B">;
                     enum<WORD> {radar_default,radar_asuka,radar_bomb,radar_cat,radar_centre,radar_copcar,radar_don,radar_eight,radar_el,radar_ice,radar_joey,radar_kenji,radar_liz,radar_luigi,radar_north,radar_ray,radar_sal,radar_save,radar_spray,radar_tony,radar_weapon} eBlipSprite;
                     align(2);
-                } RadarBlip[32];
+                } RadarBlip[32]<optimize=false>;
             } data;
         } block <name="Radar">;
         break;    
@@ -521,6 +521,30 @@ struct
                 } data;
             } data;
         } block <name="CarGenerators">;
+        break;
+
+    case 15: /* BLOCK 15: AUDIO SCRIPT OBJECTS */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                CHAR    sig[4]<comment="CGN">;
+                DWORD   size;
+                struct
+                {
+                    DWORD   nNumAudioScriptObjects;
+                    struct
+                    {
+                        DWORD   unknown;
+                        WORD    unknown;
+                        align(2);
+                        RwV3D   unknown;
+                        DWORD   unknown;
+                    } aAudioScriptObject[nNumAudioScriptObjects] <optimize=false>;
+                } data;
+            } data;
+        } block <name="AudioScriptObjects">;
         break;
 
     case 16: /* BLOCK 16: PLAYER INFO */
