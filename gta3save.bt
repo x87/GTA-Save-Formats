@@ -358,7 +358,7 @@ struct
             DWORD size;
             struct
             {
-                CHAR    sig[4]<comment="RST">;
+                CHAR    sig[4] <comment="RST">;
                 DWORD   size;
                 struct
                 {
@@ -389,7 +389,7 @@ struct
             DWORD size;
             struct
             {
-                CHAR    sig[4]<comment="RDR">;
+                CHAR    sig[4] <comment="RDR">;
                 DWORD   size;
                 struct
                 {
@@ -486,7 +486,7 @@ struct
             DWORD size;
             struct
             {
-                CHAR    sig[4]<comment="CGN">;
+                CHAR    sig[4] <comment="CGN">;
                 DWORD   size;
                 struct
                 {
@@ -529,17 +529,17 @@ struct
             DWORD size;
             struct
             {
-                CHAR    sig[4]<comment="AUD">;
+                CHAR    sig[4] <comment="AUD">;
                 DWORD   size;
                 struct
                 {
                     DWORD   nNumAudioScriptObjects;
                     struct
                     {
-                        DWORD   unknown;
-                        WORD    unknown;
+                        DWORD   _nIndex;
+                        WORD    _nSoundIndex;
                         align(2);
-                        RwV3D   unknown;
+                        RwV3D   vPos;
                         DWORD   unknown;
                     } aAudioScriptObject[nNumAudioScriptObjects] <optimize=false>;
                 } data;
@@ -603,7 +603,7 @@ struct
             DWORD size <comment="744">;
             struct
             {
-                CHAR    sig[4]<comment="PTP">;
+                CHAR    sig[4] <comment="PTP">;
                 DWORD   size;
                 struct
                 {
