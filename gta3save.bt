@@ -529,7 +529,7 @@ struct
             DWORD size;
             struct
             {
-                CHAR    sig[4]<comment="CGN">;
+                CHAR    sig[4]<comment="AUD">;
                 DWORD   size;
                 struct
                 {
