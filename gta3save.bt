@@ -523,6 +523,41 @@ struct
         } block <name="CarGenerators">;
         break;
 
+    case 14: /* BLOCK 14: PARTICLES */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                DWORD   nNumParticles;
+                struct
+                {
+                    DWORD   pVmt;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    RwV3D   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    UINT32  pNext;
+                    UINT32  pPrev;
+                    BYTE    unknown[52];
+                } aParticle[nNumParticles];
+                /* size of this block is less than its hardcoded value */
+            } data;
+        } block <name="Particles">;
+        break;
+
     case 15: /* BLOCK 15: AUDIO SCRIPT OBJECTS */
         struct
         {
@@ -566,6 +601,7 @@ struct
                 FLAG    bGetOutOfJailFree <comment="opcode 0413">;
                 FLAG    bFreeHealthCare <comment="opcode 0414">;
                 BYTE    unknown[70];
+                /* size of this block is less than its hardcoded value */
             } PlayerInfo;
         } block <name="PlayerInfo">;
         break;
