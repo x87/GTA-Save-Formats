@@ -551,8 +551,28 @@ struct
                     DWORD   _unknown;
                     UINT32  pNext;
                     UINT32  pPrev;
-                    BYTE    unknown[52];
-                } aParticle[nNumParticles];
+                    DWORD   _unknown;
+                    DWORD   _nTime;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    WORD    _unknown;
+                    WORD    _unknown;
+                    align(2); /*?*/
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    align(2);
+                } aParticle[nNumParticles] <optimize=false>;
                 /* size of this block is less than its hardcoded value */
             } data;
         } block <name="Particles">;
