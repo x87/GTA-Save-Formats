@@ -330,6 +330,37 @@ struct
         } block <name="Cranes">;
         break;
 
+    case 7: /* BLOCK 7: PICKUPS */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                struct
+                {
+                    BYTE    unknown;
+                    BYTE    unknown;
+                    WORD    unknown;
+                    DWORD   _nObjectIndex;
+                    DWORD   unknown;
+                    WORD    unknown;
+                    WORD    unknown;
+                    RwV3D   unknown;
+                } aPickup[336] <optimize=false>;
+                WORD   _nPickupsCollected;
+                align(2);
+                struct
+                {
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                } _aCollectedPickup[4] <optimize=false>;
+            } data;
+        } block <name="Pickups">;
+        break;
+
     case 8: /* BLOCK 8: PHONE INFO */
         struct
         {
