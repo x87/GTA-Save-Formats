@@ -338,14 +338,20 @@ struct
             {
                 struct
                 {
+                    enum<BYTE>{
+                        PICKUP_IN_SHOP=1,
+                        PICKUP_ON_STREET=2,
+                        PICKUP_ONCE=3,
+                        PICKUP_MONEY=7,
+                        PICKUP_ON_STREET_SLOW=14
+                    }    eType;
                     BYTE    unknown;
-                    BYTE    unknown;
+                    WORD    nAmmo;
+                    DWORD   nObjectIndex;
+                    DWORD   nRegenerateTime;
+                    WORD    nModelId;
                     WORD    unknown;
-                    DWORD   _nObjectIndex;
-                    DWORD   unknown;
-                    WORD    unknown;
-                    WORD    unknown;
-                    RwV3D   unknown;
+                    RwV3D   vPos;
                 } aPickup[336] <optimize=false>;
                 WORD   _nPickupsCollected;
                 align(2);
