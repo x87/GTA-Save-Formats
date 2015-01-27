@@ -307,6 +307,17 @@ struct
         } block <name="Objects">;
         break;
 
+    case 5: /* BLOCK 5: PATH FIND */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                BYTE    _bUnknown[size] <format=binary>;
+            } data;
+        } block <name="PathFind">;
+        break;
+
     case 6: /* BLOCK 6: CRANES */
         struct
         {
@@ -323,7 +334,7 @@ struct
                     FLOAT   _float[25];
                     DWORD   _unknown;
                     DWORD   _unknown;
-                    BYTE    _BYTE[7];
+                    BYTE    unknown[7];
                     align(1);
                 } aCrane[8] <optimize=false>;
             } data;
@@ -350,7 +361,7 @@ struct
                     DWORD   nObjectIndex;
                     DWORD   nRegenerateTime;
                     WORD    nModelId;
-                    WORD    unknown;
+                    WORD    bFlags;
                     RwV3D   vPos;
                 } aPickup[336] <optimize=false>;
                 WORD   _nPickupsCollected;
