@@ -272,6 +272,22 @@ struct
         } block <name="Garages">;
         break;
 
+
+    case 3: /* BLOCK 3: VEHICLES */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                DWORD   unknown;
+                DWORD   unknown;
+                FSkip(size-8); /* vehicles dump, 
+                                either 1156 byte per struct (boat) or 1448 (car), 
+                                is it ever used? */
+            } data;
+        } block <name="Vehicles">;
+        break;
+
     case 4: /* BLOCK 4: OBJECTS */
         struct
         {
@@ -313,7 +329,7 @@ struct
             DWORD   size;
             struct
             {
-                BYTE    _bUnknown[size] <format=binary>;
+                BYTE    _bUnknown[size] <format=binary, optimize=false>;
             } data;
         } block <name="PathFind">;
         break;
