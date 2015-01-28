@@ -279,11 +279,32 @@ struct
             DWORD   size;
             struct
             {
-                DWORD   unknown;
-                DWORD   unknown;
-                FSkip(size-8); /* vehicles dump, 
-                                either 1156 byte per struct (boat) or 1448 (car), 
-                                is it ever used? */
+                DWORD   nNumVehicles;
+                DWORD   nNumBoats;
+                struct
+                {
+                    DWORD   unknown;
+                    WORD    nModelId;
+                    DWORD   unknown;
+                    struct
+                    {
+                        BYTE    _vehicle0[52];
+                        RwV3D   vPos;
+                        BYTE    _vehicle1[1384];
+                    } CVehicle;
+                } aVehicle[nNumVehicles] <optimize=false>;
+                struct
+                {
+                    DWORD   unknown;
+                    WORD    nModelId;
+                    DWORD   unknown;
+                    struct
+                    {
+                        BYTE    _boat0[52];
+                        RwV3D   vPos;
+                        BYTE    _boat1[1092];
+                    } CBoat;
+                } aBoat[nNumBoats] <optimize=false>;
             } data;
         } block <name="Vehicles">;
         break;
