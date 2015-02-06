@@ -137,7 +137,7 @@ function handleFileSelect(e) {
                 // todo; separate module/file for this one
                 format = {
 
-                    "block 0" : {
+                    "block 0" : { /* BLOCK 0: MISCELLANEOUS */
                         size                        : "dword",
                         data : {
                             szTitle                     : "wchar_t[24]",
@@ -240,6 +240,29 @@ function handleFileSelect(e) {
                                         }, "nNumActiveScripts"],
                                     }
                                 }
+                            }
+                        }
+                    },
+                    "block 1" : { /* BLOCK 1: PLAYER PEDS */
+                        size                        : "dword",
+                        data : {
+                            size                        : "dword",
+                            data : {
+
+                                nNumPlayers             : "dword",
+                                aPlayerPed : [{
+                                    unknown1 : "dword",
+                                    unknown2 : "word",
+                                    unknown3 : "dword",
+                                    CPed : {
+                                        ped0 : "byte[52]",
+                                        pos  : RwV3D,
+                                        ped1 : "dword[364]"
+                                    },
+                                    nMaxWantedLevel : "dword",
+                                    nMaxChaosLevel : "dword",
+                                    szModelName : "char[24]"
+                                }, "nNumPlayers"]
                             }
                         }
                     }
