@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <link href="bower_components/jquery-treetable/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+    <link href="bower_components/jquery-treetable/css/jquery.treetable.theme.default.css" rel="stylesheet" type="text/css" />
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-treetable/jquery.treetable.js"></script>
+    <style>
+        body {font-family: 'Inconsolata', monospace}
+        table td, table th {padding-right: 1em}
+        table th {text-align: left}
+        #drop {
+            display: block;
+            position:absolute;
+            height:auto;
+            bottom:0;
+            top:0;
+            left:0;
+            right:0;
+            border:2px dashed #999;
+            text-align: center;
+            padding-top: 300px;
+            font-size: 3em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div id="drop">&gt;&gt; Drop file here &lt;&lt;</div>
+<div id="output"></div>
+<script src="binreader.js"></script>
+</body>
+</html>
