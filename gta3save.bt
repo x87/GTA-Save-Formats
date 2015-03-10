@@ -1,0 +1,786 @@
+//--------------------------------------
+//--- 010 Editor v5.0 Binary Template
+//
+// Author: Seemann
+// Purpose: documenting GTA III save file format
+// See http://www.gtamodding.com/wiki/Saves_(GTA_3)
+//--------------------------------------
+
+//Assert(FileSize() == 201820, "File size must be 201820 bytes");
+
+typedef struct RwV3D
+{
+  FLOAT X, Y, Z;
+};
+
+void align(int n)
+{
+    FSkip(n);
+};
+
+enum <BYTE>  FLAG    {OFF,ON};
+enum <WORD>  FLAG_   {OFF_,ON_};
+enum <DWORD> FLAG__  {OFF__,ON__};
+enum <DWORD> LEVEL   {Portland = 1, Staunton, Shoreside};
+enum <WORD>  DAY     {Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday};
+
+local int n = 0;
+local int s = 0;
+
+
+struct
+{
+    DWORD size;
+    switch (n++)
+    {
+    case 0: /* BLOCK 0: MISCELLANEOUS */
+        struct
+        {
+            wchar_t szTitle[24];
+            struct SYSTEMTIME
+            {
+                WORD nYear, nMonth;
+                DAY  eDayOfWeek;
+                WORD nDay, nHour, nMinute, nSecond, nMilliseconds;
+            } systemTime;
+            DWORD   _unknown;
+            LEVEL   eCurrentLevel;
+            RwV3D   vCameraPos;
+            UINT    nMillisecondsPerGameMinute;
+            UINT    nLastClockTick <comment="WeatherTimer">;
+            BYTE    nHours;
+            align(3);
+            BYTE    nMinutes;
+            align(3);
+            WORD    _nCurrentPadMode;
+            align(2);
+            UINT    nTimeInMilliseconds <comment="GlobalTimer">;
+            FLOAT   fTimeScale <comment="opcode 015D">;
+            FLOAT   fTimerTimeStep;
+            FLOAT   fTimerTimeStepNonClipped;
+            UINT    nFrameCounter;
+            FLOAT   _fTimeStep <comment="unused (always 1.0)?">;
+            FLOAT   _fFramesPerUpdate <comment="unused (always 1.0)?">;
+            FLOAT   _fTimeScale <comment="unused (always 1.0)?">;
+            INT16   nOldWeatherType;
+            align(2);
+            INT16   nNewWeatherType;
+            align(2);
+            INT16   nForcedWeatherType;
+            align(2);
+            FLOAT   _fWeatherInterpolationValue;
+            BYTE    _szCompileTime[24] <comment="unused?">;
+            DWORD   _nWeatherTypeInList;
+            FLOAT   _unknown <comment="camera related">;
+            FLOAT   _unknown <comment="camera related">;
+
+            DWORD size;
+            struct
+            {
+                CHAR sig[4] <comment="SCR">;
+
+                DWORD   size;
+                struct
+                {
+                    UINT    nVariableSpaceSize;
+                    DWORD   aScriptVariable[nVariableSpaceSize / 4];
+
+                    DWORD   size <comment="968">;
+                    struct
+                    {
+                        DWORD   nOnAMissionFlag <comment="offset in aScriptVariable">;
+
+                        struct
+                        {
+                           DWORD    nMissionFlag <comment="opcode 0181">;
+                           DWORD    nBaseBrief <comment="opcode 0182">;
+                        } aContactInfo[16];
+
+                        struct
+                        {
+                            INT32   _unknown[16];
+                        } _unknown[4];
+
+                        DWORD   _nLastMissionPassedTime <comment="unused (always 0)?">;
+
+                        struct
+                        {
+                            DWORD   nType;
+                            DWORD   nBuildingHandle;
+                            DWORD   nNewModel;
+                            DWORD   nOldModel;
+                        } aBuildingSwap[25];
+
+                        struct
+                        {
+                            DWORD   nType;
+                            DWORD   nHandle;
+                        } aInvisibilitySetting[20];
+
+                        FLAG    bAlreadyRunningAMissionScript;
+                        align(3);
+                        UINT    nMainScriptSize;
+                        UINT    nLargestMissionScriptSize;
+                        INT16   nNumberOfExclusiveMissionScripts;
+                        align(2);
+                    } data;
+                    DWORD   nNumActiveScripts;
+                    struct
+                    {
+                        DWORD   pNext;
+                        DWORD   pPrev;
+                        CHAR    szName[8];
+                        DWORD   nCurrentIp;
+                        DWORD   nReturnStack[4];
+                        DWORD   _f24;
+                        DWORD   _f28;
+                        WORD    nStackCounter;
+                        align(2);
+                        DWORD   nLocals[16];
+                        DWORD   nTimerA;
+                        DWORD   nTimerB;
+                        BYTE    bIfResult;
+                        BYTE    _f79;
+                        BYTE    _f7A;
+                        align(1);
+                        DWORD   nWakeTime;
+                        WORD    nIfNumber;
+                        BYTE    _f82;
+                        BYTE    _f83;
+                        BYTE    _f84;
+                        BYTE    _f85;
+                        BYTE    _f86;
+                        BYTE    _f87;
+                    } aRunningScript[nNumActiveScripts]<optimize=false>;
+                } data;
+            } data;
+        } block <name="Misc">;
+        break;
+
+    case 1: /* BLOCK 1: PLAYER PEDS */
+        struct
+        {
+            DWORD size;
+            struct {
+                DWORD nNumPlayers;
+                struct
+                {
+                    DWORD   _unknown;
+                    WORD    _unknown;
+                    DWORD   _unknown <comment="ped_ref">;
+                    struct
+                    {
+                        BYTE    _ped0[52];
+                        RwV3D   vPos;
+                        BYTE    _ped1[1456];
+                    } CPed;
+                    DWORD   nMaxWantedLevel;
+                    DWORD   nMaxChaosLevel;
+                    CHAR    szModelName[24];
+                } aPlayerPed[nNumPlayers] <optimize=false>;
+            } data;
+        } block <name="PlayerPeds">;
+        break;
+
+    case 2: /* BLOCK 2: GARAGES */
+        struct
+        {
+            DWORD size <comment="5484">;
+            struct
+            {
+                DWORD   nNumGarages;
+                FLAG__  nBombsAreFree <comment="opcode 021D">;
+                FLAG__  nRespraysAreFree <comment="opcode 0335">;
+                DWORD   _nCarsCollected <comment="unused?">;
+                DWORD   _nBankVansCollected;
+                DWORD   _nPoliceCarsCollected;
+                DWORD   nImportStatus[3]<format=binary>;
+                DWORD   nLastTimeHelpMessage <comment="'GA_21' text message">;
+                struct
+                {
+                    struct
+                    {
+                        DWORD   nModelId;
+                        RwV3D   vPos;
+                        RwV3D   vRotation;
+                        DWORD   nImmunities<format=binary>;
+                        BYTE    bPrimaryColor;
+                        BYTE    bSecondaryColor;
+                        BYTE    bRadioStation;
+                        BYTE    bModelVariationA;
+                        BYTE    bModelVariationB;
+                        BYTE    bBombType;
+                        align(2);
+                    } aStoredCar[3]<optimize=false, comment="portland, staunton, shoreside">;
+                }  aSaveGarageSlot[6]<optimize=false>;
+                struct
+                {
+                    BYTE    eType <comment="saveGaragePortland = 16,saveGarageStaunton = 17, saveGarageShoreside = 18">;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    align(2);
+                    DWORD   _unknown;
+                    DWORD   _unknown <comment="pointer">;
+                    DWORD   _unknown <comment="pointer">;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    align(1);
+                    FLOAT   fX1;
+                    FLOAT   fX2;
+                    FLOAT   fY1;
+                    FLOAT   fY2;
+                    FLOAT   fZ1;
+                    FLOAT   fZ2;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    BYTE    _unknown;
+                    align(3);
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    align(2);
+                } aGarage[32]<optimize=false>;
+            } data;
+        } block <name="Garages">;
+        break;
+
+
+    case 3: /* BLOCK 3: VEHICLES */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                DWORD   nNumVehicles;
+                DWORD   nNumBoats;
+                struct
+                {
+                    DWORD   unknown;
+                    WORD    nModelId;
+                    DWORD   unknown;
+                    struct
+                    {
+                        BYTE    _vehicle0[52];
+                        RwV3D   vPos;
+                        BYTE    _vehicle1[1384];
+                    } CVehicle;
+                } aVehicle[nNumVehicles] <optimize=false>;
+                struct
+                {
+                    DWORD   unknown;
+                    WORD    nModelId;
+                    DWORD   unknown;
+                    struct
+                    {
+                        BYTE    _boat0[52];
+                        RwV3D   vPos;
+                        BYTE    _boat1[1092];
+                    } CBoat;
+                } aBoat[nNumBoats] <optimize=false>;
+            } data;
+        } block <name="Vehicles">;
+        break;
+
+    case 4: /* BLOCK 4: OBJECTS */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                DWORD   nNumObjects;
+                struct
+                {
+                    WORD    nModelId;
+                    DWORD   nObjectRef;
+                    RwV3D   pos;
+                    BYTE    _unknown1[12] <comment="compressed matrix">;
+                    FLOAT   _unknown;
+                    RwV3D   _unknown;
+                    BYTE    _unknown2[12] <comment="compressed matrix">;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    FLOAT   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                } Object[nNumObjects] <optimize=false>;
+            } data;
+        } block <name="Objects">;
+        break;
+
+    case 5: /* BLOCK 5: PATH FIND */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                BYTE    _bUnknown[size] <format=binary, optimize=false>;
+            } data;
+        } block <name="PathFind">;
+        break;
+
+    case 6: /* BLOCK 6: CRANES */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                DWORD   nNumCranes;
+                DWORD   nCarsCollectedMilitaryCrane<format=binary, comment="opcode 03ec">;
+                struct
+                {
+                    DWORD   nStaticIndex <comment="index in static objects pool?">;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _float[25];
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    BYTE    unknown[7];
+                    align(1);
+                } aCrane[8] <optimize=false>;
+            } data;
+        } block <name="Cranes">;
+        break;
+
+    case 7: /* BLOCK 7: PICKUPS */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                struct
+                {
+                    enum<BYTE>{
+                        PICKUP_IN_SHOP=1,
+                        PICKUP_ON_STREET=2,
+                        PICKUP_ONCE=3,
+                        PICKUP_MONEY=7,
+                        PICKUP_ON_STREET_SLOW=14
+                    }    eType;
+                    BYTE    unknown;
+                    WORD    nAmmo;
+                    DWORD   nObjectIndex;
+                    DWORD   nRegenerateTime;
+                    WORD    nModelId;
+                    WORD    bFlags;
+                    RwV3D   vPos;
+                } aPickup[336] <optimize=false>;
+                WORD   _nPickupsCollected;
+                align(2);
+                struct
+                {
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                    DWORD   unknown;
+                } _aCollectedPickup[4] <optimize=false>;
+            } data;
+        } block <name="Pickups">;
+        break;
+
+    case 8: /* BLOCK 8: PHONE INFO */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                DWORD   nNumPhones;
+                DWORD   nNumActivePhones;
+                struct
+                {
+                    RwV3D   vPos;
+                    UINT32  pszText[6] <comment="pointers to text assigned with opcodes like 0388">;
+                    DWORD   _unknown;
+                    DWORD   nStaticIndex <comment="index in static objects pool?">;
+                    enum<DWORD>{eIdle=3,eRinging=9}   eStatus;
+                    BYTE    _unknown;
+                    align(3);
+                } aPhoneInfo[50]<optimize=false>;
+            } data;
+        } block <name="PhoneInfo">;
+        break;
+
+    case 9: /* BLOCK 9: RESTARTS */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                CHAR    sig[4] <comment="RST">;
+                DWORD   size;
+                struct
+                {
+                    typedef struct Restart
+                    {
+                        RwV3D vPos;
+                        FLOAT fAngle;
+                    };
+                    Restart    aHospitalRestart[8];
+                    Restart    aPoliceRestart[8];
+                    WORD    nNumHospitalRestarts;
+                    WORD    nNumPoliceRestarts;
+                    FLAG    bOverrideNextRestart <comment="opcodes 016E, 0255">;
+                    align(3);
+                    Restart vOverrideRestart <comment="opcodes 016E, 0255">;
+                    FLAG    bFadeInAfterNextDeath <comment="opcode 040F">;
+                    FLAG    bFadeInAfterNextArrest <comment="opcode 040E">;
+                    FLAG    bOverrideHospitalLevel <comment="opcode 041F">;
+                    FLAG    bOverridePoliceLevel <comment="opcode 0420">;
+                } data;
+            } data;
+        } block <name="Restarts">;
+        break;
+
+    case 10: /* BLOCK 10: RADAR */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                CHAR    sig[4] <comment="RDR">;
+                DWORD   size;
+                struct
+                {
+                    DWORD   nColour <comment="opcode 0165">;
+                    DWORD   nType;
+                    DWORD   nEntityHandle <comment="car/actor/object handle">;
+                    FLOAT   _fX;
+                    FLOAT   _fY;
+                    RwV3D   vPos;
+                    WORD    _Index;
+                    BYTE    nBrightness <comment="opcode 0166">;
+                    BYTE    _unknown;
+                    FLOAT   _unknown;
+                    WORD    nScale <comment="opcode 0168">;
+                    WORD    nDisplay <comment="opcode 018B">;
+                    enum<WORD> {radar_default,radar_asuka,radar_bomb,radar_cat,radar_centre,radar_copcar,radar_don,radar_eight,radar_el,radar_ice,radar_joey,radar_kenji,radar_liz,radar_luigi,radar_north,radar_ray,radar_sal,radar_save,radar_spray,radar_tony,radar_weapon} eBlipSprite;
+                    align(2);
+                } RadarBlip[32]<optimize=false>;
+            } data;
+        } block <name="Radar">;
+        break;    
+
+    case 11: /* BLOCK 11: THE ZONES */
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                CHAR    sig[4] <comment="ZNS">;
+                DWORD   size;
+                struct
+                {
+                    typedef struct
+                    {
+                        CHAR    szName[8];
+                        RwV3D   vCoordA;
+                        RwV3D   vCoordB;
+                        enum<DWORD>{}   eZoneType <comment="0, 1, 2 or 3 for MapZone">;
+                        LEVEL   eZoneLevel;
+                        WORD    nZoneInfoIdNight;
+                        WORD    nZoneInfoIdDay;
+                        INT32   nChildZoneIndex;
+                        INT32   nParentZoneIndex;
+                        INT32   nSiblingZoneIndex;
+                    } Zone;
+
+                    DWORD   nCurrentZoneIndex;
+                    LEVEL   eCurrentLevel;
+                    WORD    nFindIndex <comment="index of last search invoked by a script">;
+                    align(2);
+                    Zone    aNavigationZone[50] <comment="from gta3.zon">;
+                    struct
+                    {
+                        WORD    aDensity[29];
+                    } aZoneInfo[100] <comment="day/night pairs for each Zone">;
+                    WORD    nTotalNumberOfNavigationZones;
+                    WORD    nTotalNumberOfZoneInfos;
+                    Zone    aMapZone[25] <comment="from map.zon">;
+                    struct
+                    {
+                        INT16    nZoneId;
+                    } aAudioZone[36];
+                    WORD    nTotalNumberOfMapZones;
+                    WORD    nNumberOfAudioZones;
+                } data;
+            } data;
+        } block <name="Zones">;
+        break;
+
+    case 12: /* BLOCK 12: GANGS */
+
+        struct
+        {
+            DWORD   size;
+            struct
+            {
+                CHAR    sig[4] <comment="GNG">;
+                DWORD   size;
+                struct
+                {
+                    int     nCarModel;
+                    BYTE    bPedModelOverride <comment="opcode 0410">;
+                    align(3);
+                    DWORD   nPrimaryWeapon;
+                    DWORD   nSecondaryWeapon;
+                } aGang[9]<optimize=false>;
+            } data;
+        } block <name="Gangs">;
+        break;
+
+    case 13: /* BLOCK 13: CAR GENERATORS */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                CHAR    sig[4] <comment="CGN">;
+                DWORD   size;
+                struct
+                {
+                    DWORD size <comment="12">;
+                    struct
+                    {
+                        DWORD   nNumOfCarGenerators;
+                        DWORD   nCurrentActiveCount;
+                        BYTE    _bProcessCounter;
+                        BYTE    _bGenerateEvenIfPlayerIsCloseCounter;
+                        align(2);
+                    } data;
+                    DWORD size <comment="11560">;
+                    struct
+                    {
+                        DWORD   nModelId;
+                        RwV3D   vPos;
+                        FLOAT   fAngle;
+                        INT16   nPrimaryColor, nSecondaryColor;
+                        FLAG    bForceSpawn;
+                        BYTE    bAlarm;
+                        BYTE    bDoorLock;
+                        align(1);
+                        WORD    nMinDelay, nMaxDelay;
+                        DWORD   nTime;
+                        int     _unknown;
+                        int     _unknown;
+                        RwV3D   _unknown;
+                        RwV3D   _unknown;
+                        DWORD   _unknown;
+                    } aCarGenerator[160]<optimize=false>;
+                } data;
+            } data;
+        } block <name="CarGenerators">;
+        break;
+
+    case 14: /* BLOCK 14: PARTICLES */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                DWORD   nNumParticles;
+                struct
+                {
+                    DWORD   pVmt;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _unknown;
+                    RwV3D   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    UINT32  pNext;
+                    UINT32  pPrev;
+                    DWORD   _unknown;
+                    DWORD   _nTime;
+                    DWORD   _unknown;
+                    DWORD   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    WORD    _unknown;
+                    WORD    _unknown;
+                    align(2); /*?*/
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
+                    align(2);
+                } aParticle[nNumParticles] <optimize=false>;
+                /* size of this block is less than its hardcoded value */
+            } data;
+        } block <name="Particles">;
+        break;
+
+    case 15: /* BLOCK 15: AUDIO SCRIPT OBJECTS */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                CHAR    sig[4] <comment="AUD">;
+                DWORD   size;
+                struct
+                {
+                    DWORD   nNumAudioScriptObjects;
+                    struct
+                    {
+                        DWORD   _nIndex;
+                        WORD    _nSoundIndex;
+                        align(2);
+                        RwV3D   vPos;
+                        DWORD   unknown;
+                    } aAudioScriptObject[nNumAudioScriptObjects] <optimize=false>;
+                } data;
+            } data;
+        } block <name="AudioScriptObjects">;
+        break;
+
+    case 16: /* BLOCK 16: PLAYER INFO */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                DWORD   nMoney;
+                BYTE    _fD8;
+                DWORD   _fDC;
+                WORD    _fFC;
+                FLOAT   _f100;
+                DWORD   nMoneyOnScreen;
+                DWORD   nHiddenPackagesPickedUp;
+                DWORD   nHiddenPackagesCount <comment="opcode 02ED">;
+                FLAG    bPlayerNeverGetsTired <comment="opcode 0330">;
+                FLAG    bPlayerFastReload <comment="opcode 0331">;
+                FLAG    bGetOutOfJailFree <comment="opcode 0413">;
+                FLAG    bFreeHealthCare <comment="opcode 0414">;
+                BYTE    unknown[70];
+                /* size of this block is less than its hardcoded value */
+            } PlayerInfo;
+        } block <name="PlayerInfo">;
+        break;
+
+    case 17: /* BLOCK 17: STATS */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                DWORD size;
+                struct
+                {
+                    DWORD   stat[102];
+                    CHAR    szLastMissionPassedName[8] <comment="GXT key">;
+                } data;
+            } data;
+        } block <name="Stats">;
+        break;
+
+    case 18: /* BLOCK 18: STREAMING */
+        struct
+        {
+            DWORD size;
+            struct
+            {
+                BYTE    _unknown[200];
+            } data;
+        } block <name="Streaming">;
+        break;
+
+    case 19: /* BLOCK 19: PED TYPES */
+        struct
+        {
+            DWORD size <comment="744">;
+            struct
+            {
+                CHAR    sig[4] <comment="PTP">;
+                DWORD   size;
+                struct
+                {
+                    DWORD   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   _nThreat <format=binary,comment="opcodes 03F1, 03F2, 042A">;
+                    DWORD   _unknown;
+                } aPedType[23];
+            } data;
+        } block <name="PedTypes">;
+        break;
+
+    case 20:
+    case 21:
+        struct
+        {
+            align(size);
+        } block <name="padding">;
+        break;
+    default:
+        struct
+        {
+            align(size);
+        } block;
+    }
+    if (sizeof(block) < size) align(size-sizeof(block));
+} block[22]<optimize=false,open=true>;
+string checkSum(int nOldSum){
+    UINT nNewSum = Checksum(CHECKSUM_BYTE, 0, FileSize()-4);
+    if (nNewSum != nOldSum) WriteUInt(FileSize()-4, nNewSum);
+    string s;
+    SPrintf( s, "%d", (UINT) nNewSum);
+    return s;
+};
+DWORD checksum<read=checkSum>;
