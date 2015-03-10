@@ -1,0 +1,736 @@
+/* --------------------------------------
+ GTA: SA Save File 010 template 
+ Revision: 03/07/08
+ 
+ Based on GTA: SA save format article from:
+ www.gtamodding.com/index.php?title=GTA_SA_Saves
+
+ Credits go to CyQ, pdescobar, OrionSR and everyone who contributed in this article.
+
+ by Seemann
+ www.sannybuilder.com
+-------------------------------------- */
+
+struct gameTime
+{
+    enum <byte> enumMonths {Jan = 1, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec } month;
+    byte monthDay;
+    byte hour, minute;
+};
+
+struct RwV3D
+{
+  float X,Y,Z;
+};
+
+struct RGBA
+{
+    byte red, green, blue, alpha;
+};
+
+struct tExternalScriptTrigger
+{
+    short   index;
+    byte    attachType;
+    byte    type;
+    int     status;
+    float   radius;
+    short   modelID;
+    short   priority;
+    int     unknown;
+};
+
+struct tThread
+{
+    short   index;
+    /* Script Thread */
+    int     pNext <format=hex>, pPrev <format=hex>;
+    char    name[8];
+    int     baseIP <format=hex>;
+    int     currentIP <format=hex>;
+    int     returnStack[8] <format=hex>;
+    short   stackID;
+    short   __gap1;
+    int     locals[32];
+    int     timers[2];
+    byte    unknown1;
+    byte    ifResult;
+    byte    unknown2;
+    byte    boolIsExternal;
+    byte    unknown3[4];
+    int     wakeupTime;
+    short   ifNumber;
+    byte    boolNotFlag;
+    byte    boolWBcheck;
+    byte    unknown4[4];
+    int     skipScenePos;
+    byte    boolIsMission;
+    byte    __gap[3];
+    /* Relative Addresses */
+    int     relativeIP;
+    int     relativeReturnStack[8];
+};
+
+struct tGarageVehiclesTown
+{
+    struct tGarageVehicle
+    {
+        RwV3D       pos;
+        byte        unknown[4];
+        byte        flags<format=binary>;
+        byte        unknown1;
+        WORD        modelID;
+        WORD        vehicleMods[15];
+        byte        colors[4];
+        byte        radioStation;
+        byte        vehicleVariation[2];
+        byte        bombType;
+        byte        paintJob;
+        byte        nNitrous;
+        ubyte       vecRotation[3];
+        byte        align;
+    } vehicles[20];
+};
+
+struct tPickup
+{
+    float   assetValue;
+    DWORD   pObject<format=hex>;
+    DWORD   maxAssetValue;
+    DWORD   _timer;
+    WORD    pos[3];/*all multiplied by 8*/;
+    WORD    assetRate;
+    WORD    modelID;
+    WORD    index;
+    byte    type;
+    byte    flags<format=binary>;
+    byte    __gap[2];
+};
+
+struct tWeapon
+{
+    DWORD       type;
+    DWORD       _state;
+    DWORD       unknown_ammo;
+    DWORD       ammo;
+    DWORD       _shots;
+    byte        unknown[8];
+};
+
+struct tPlayer
+{
+    DWORD       handle;
+    int         modelID;
+    int         pedType;
+    DWORD       _size1<format=hex>;
+    /*0x18C*/
+    RwV3D       pos;
+    float       health, armor;
+    tWeapon     weapons[13];
+    byte        ref;
+    byte        weaponSlot;
+    byte        unknown;
+    byte        __gap1;
+    int         unknown_enex;
+    byte        unknown_melee1;
+    byte        unknown_melee2;
+    byte        __gap2[2];
+    DWORD       _size2<format=hex>;
+    /*0x84*/
+    int         chaos;
+    byte        wantedLevel;
+    byte        __gap3[3];
+    DWORD       texturesCRC[28]<format=hex>;
+    float       fat, muscle;
+    DWORD       __gap4;
+};
+
+struct tObject
+{   
+    DWORD       handle;
+    int         modelID;
+    DWORD       _size;
+    /*48*/
+    RwV3D       pos;
+    byte        pos_right[3];
+    byte        pos_top[3];
+    byte        unknown[30];
+};
+
+struct tGarage
+{
+    byte        type;
+    byte        flags[2];
+    byte        __gap1;
+    float       llX, llY;
+    float       zFloor;
+    float       rotQuaternion[4]; /*Rx, Ry, Rz, Rw*/
+    float       zCeiling;
+    float       width; /* dimension parallel to door in xy plane */
+    float       depth; /* dimension parallel to door in xy plane */
+    float       minX, maxX;
+    float       minY, manY;
+    float       doorState; /* 1 - is open */
+    float       _door_timer;
+    char        garageName[8];
+    WORD        unknown; /* Possibly Original Type */
+    byte        __gap2[2];
+};
+
+struct tRestart
+{
+    RwV3D       location;
+    float       angle;
+    int         town;    
+};
+
+struct tMarker
+{
+    int     color;
+    DWORD   handle;
+    RwV3D   pos;
+    WORD    index;
+    WORD    __gap1;
+    float   radius;
+    WORD    size;
+    WORD    __gap2;
+    DWORD   unknown;
+    byte    icon;
+    byte    flags[2]<format=binary>;
+    byte    __gap3;
+};
+
+struct tZoneInfo
+{
+    char    name[8];
+    char    zoneGxt[8];
+    short   x1, y1, z1;
+    short   x2, y2, z2;
+    WORD    id;
+    byte    type;
+    byte    island;
+};
+
+struct tZonePop
+{
+    byte    gangsDensity[10];
+    byte    _dealerDensity;
+    RGBA    color;
+    byte    popCycleGroup;
+    byte    unknown;    
+};
+
+struct tCarGenerator
+{
+    WORD        index;
+    WORD        modelID;
+    byte        colors[2];
+    WORD        x,y,z;
+    byte        angle;
+    byte        alarmChance;
+    byte        lockChance;
+    byte        flags<format=binary>;
+    WORD        unknown1;
+    WORD        monetaryValue;
+    WORD        __gap1;
+    DWORD       timer;
+    short       unknown2;
+    short       nCarsToGenerate;
+    byte        iplStream;
+    byte        boolAllocated;
+    WORD        __gap2;   
+};
+
+struct tblockHeader
+{
+    SetBackColor(cDkGreen);
+    SetForeColor(cWhite);
+    char Sig[5];
+    SetBackColor(cNone);
+    SetForeColor(cNone);
+    if(Sig != "BLOCK") 
+    {
+        Warning("Not a valid BLOCK signature");
+        return -1;
+    }
+};
+
+
+// Block 0: Miscellaneous
+struct tBlock00_Misc
+{
+    tblockHeader header;
+    uint        version <format=hex>;
+    char        saveName[100];
+    byte        missionPack;
+    byte        __gap1[3];
+    uint        currentTown;
+    RwV3D       cameraPos;
+    uint        gameMinuteLength;
+    int         weatherTimer;
+    gameTime    currentTime;
+    byte        weekday;
+    gameTime    timeCopy;
+    byte        booltimeCopy;
+    WORD        unknown1;
+    byte        boolHasEverCheated;
+    byte        __gap2[3];
+    DWORD       timer;
+    float       gamespeed;
+    float       unknown2;
+    float       _ticktime;
+    DWORD       nFramesProcessed;
+    WORD        unknown3, unknown4;
+    short       weatherID;
+    WORD        __gap3;
+    DWORD       unknown5, unknown6, unknown7;
+    int         vehicleCamView;
+    int         onFootCamView;
+    int         currentInterior;
+    byte        unknown8;
+    byte        __gap4[3];
+    DWORD       _originalInteriorColor<format=hex>;
+    byte        _interiorFlag;
+    byte        __gap5[3];
+    DWORD       unknown10;
+    DWORD       interiorColor;
+    DWORD       unknown11;
+    byte        boolRiotFlag;
+    byte        unknown12;
+    WORD        __gap6;
+    DWORD       maxWantedLevel, maxChaos;
+    byte        unknown13;
+    byte        isGermanLang;
+    byte        unknown14;
+    byte        __gap7[46];
+    byte        cinematicCamHelpLeft;
+    struct SYSTEMTIME
+    {
+        WORD wYear, wMonth, wDayOfWeek, wDay, wHour, wMinute, wSecond, wMilliseconds;
+    } systemTime;
+    DWORD       targetMarkerHandle<format=hex>;
+    byte        _unknown15[2];
+    byte        boolVehicleStealingHelpShown;
+    byte        boolAllTaxisWithNitro;
+    byte        boolProstitutesPayYou;
+    byte        __gap8;
+ } block0;
+
+
+// Block 1: Script
+struct tBlock01_Script
+{
+    tblockHeader header;
+    
+    int                 nGlobalVars;
+    int                 varSpace[nGlobalVars/4];
+    tExternalScriptTrigger trigger[70];
+    int                 onMissionFlagOffset;
+    int                 lastMissionTime;
+
+    struct tStaticReplacement
+    {
+        DWORD       type; /*always 2*/
+        int         handle;
+        int         newModelID, oldModelID;
+    } staticReplacement[25];   
+
+    struct tInvisibleObject
+    {
+        int   type, handle;
+    } invisibleObject[20];
+    int                 disabledCarparkingModels[20];
+
+    struct tLodAssignment
+    {
+        int   objHandle, lodHandle;
+    } LodAssignment[10];
+
+    struct tScriptAssignment
+    {
+        int     actorModelID;
+        char    scriptName[8];
+        DWORD   unknown[2];
+    
+    } ScriptAssignment[8];
+    byte                unknown1, unknown2;
+    int                 scmMainSize;
+    int                 largestMissionSize;
+    int                 missionsNumber;
+    int                 highestLocalVariable;
+    int                 nRunningThreads;
+    tThread             threads[nRunningThreads];
+} block1;
+
+
+// Block 2: Players & Objects
+struct tBlock02_Players_n_Objects
+{
+    tblockHeader header;
+    int         nPlayers;
+    tPlayer     players[nPlayers];
+    int         nObjects;
+    tObject     objects[nObjects];
+} block2;
+
+
+// Block 3: Garages
+struct tBlock03_Garages
+{
+    tblockHeader header;
+    int                 nGarages;
+    byte                boolFreeBombs, boolFreeResprays;
+    byte                boolRespraysDisabled;
+    DWORD               unknown[8];
+    tGarageVehiclesTown GarageVehicles[4];
+    tGarage             Garages[nGarages];
+} block3;
+
+
+// Block 4: WastedBusted
+struct tBlock04_WastedBusted
+{
+    tblockHeader header;
+    int                 nUnknown;
+    byte                boolLoseStuffAfterWasted, boolLoseStuffAfterBusted;
+    byte                boolUnknownWastedBustedFlag;
+    DWORD               unknownWastedBustedTime;
+    byte                block4Unknown[16*nUnknown];
+} block4;
+
+
+// Block 5: Disabled Pathnode Cubes
+struct tBlock05_DisabledPathNodes
+{
+    tblockHeader header;
+    int                 nEntries;
+    struct tBlock5Chunk
+    {
+        float   unknown[6];
+        byte    flags[4];
+    } chunks[nEntries];      
+} block5;
+
+
+// Block 6: Pickups
+struct tBlock06_Pickups
+{
+    tblockHeader header;
+    tPickup             pickups[620];
+    WORD                nPickupsPickedUp;
+    byte                weaponPickupMessageCounter;
+    DWORD               pickupsPickedUpHandles[20]<format=hex>;
+} block6;
+
+
+// Block 7: Empty (UNUSED)
+struct tBlock07_Unused
+{
+    tblockHeader header;
+} block7;
+
+
+// Block 8: Restart locations
+struct tBlock08_RestartLocations
+{
+    tblockHeader header;
+    WORD        nWastedRestarts;
+    tRestart    wastedRestarts[nWastedRestarts];
+    WORD        nBustedRestarts;
+    tRestart    bustedRestarts[nBustedRestarts];
+    byte        unknown[55];
+} block8;
+
+
+// Block 9: Markers
+struct tBlock09_Markers
+{
+    tblockHeader    header;    
+    tMarker         markers[175];
+} block9;
+
+
+// Block 10: Zones
+struct tBlock10_Zones
+{
+    tblockHeader header;
+    int         currentTown;
+    WORD        nZoneInfo1Entries;
+    WORD        nZonePopEntries;
+    WORD        nZoneInfo2Entries;
+    tZoneInfo   zoneInfo1[nZoneInfo1Entries];
+    tZonePop    zonePop[nZonePopEntries];
+    tZoneInfo   zoneInfo2[nZoneInfo2Entries];
+    byte        boolMapFogFlags[100];
+    int         nOpenedMapSectors;
+} block10;
+
+
+// Block 11: Gang Weapons
+struct tBlock11_GangWeapons
+{
+    tblockHeader    header;
+    struct tGangWeapon
+    {
+        int     _unused;
+        DWORD   weaponID[3];
+    } gangWeapons[10];   
+} block11;
+
+ 
+// Block 12: Car Generators
+struct tBlock12_CarGenerators
+{
+    tblockHeader header;
+    int             nCarGenerators;
+    byte            unknown1;
+    byte            unknown2;
+    tCarGenerator   carGenerators[nCarGenerators];
+    int             nNumplatesUsed;   
+    struct tNumplate
+    {
+        int         carGeneratorIndex;
+        char        numplate[8];
+        byte        unknown[4];
+    } numplates[15];
+} block12;
+ 
+
+// Block 13: Empty (UNUSED)
+struct tBlock13_Unused
+{
+    tblockHeader header;
+} block13;
+
+
+// Block 14: Empty (UNUSED)
+struct tBlock14_Unused
+{
+    tblockHeader header;
+} block14;
+
+
+// Block 15: Player Data
+struct tBlock15_PlayerData
+{
+    tblockHeader header;
+    DWORD       _size;
+    int         money;
+    WORD        unknown1;
+    byte        boolWBflag;
+    byte        __gap1;
+    float       unknown2;
+    int         moneyOnScreen;
+    byte        unknown3;
+    byte        __gap2[3];
+    int         hiddenPackagesLeft;
+    int         totalHiddenPackages;
+    byte        boolInfiniteRun;
+    byte        boolFastReload;
+    byte        boolFireProof;
+    ubyte       maxHealth;
+    ubyte       maxArmor;
+    byte        boolFreeBustedOnce;
+    byte        boolFreeWastedOnce;
+    byte        boolEnableDriveby;
+    byte        unknown4;
+    byte        __gap3;
+    WORD        unknown5;
+} block15;
+
+
+// Block 16: Stats
+struct tBlock16_Stats
+{
+    tblockHeader header;
+    float           fStats[82];
+    int             iStats[223];
+    DWORD           unknown1[32];
+    char            lastMission[8];
+    byte            unknown2[56];
+    DWORD           unknown3[100];
+    byte            unknown4[128];
+} block16;
+
+
+// Block 17: Police trigger zones
+struct tBlock17_PoliceTriggerZones
+{
+    tblockHeader header;
+    int         triggersUsed;
+    struct      tPoint
+    {
+        WORD    x,y;
+    };
+    struct      policeTrigger
+    {
+        DWORD   lastActivationTime;
+        tPoint  zonePoint1, zonePoint2;
+        tPoint  policeVehicleAStart;
+        tPoint  policeVehicleADirection;
+        tPoint  policeVehicleBStart;
+        tPoint  policeVehicleBDirection;
+        byte    triggerType;
+        byte    __gap[3];
+    } triggers[210];
+} block17;
+
+
+// Block 18: Models
+struct tBlock18_Models
+{
+    tblockHeader    header;
+    byte            flags[26316];
+} block18;
+
+
+// Block 19: Ped Acquaintances
+struct tBlock19_PedAcquaintances
+{
+    tblockHeader header;
+    struct tPedAcquaintance
+    {
+        DWORD   respect<format=binary>;
+        DWORD   like<format=binary>;
+        DWORD   _ignore<format=binary>;
+        DWORD   dislike<format=binary>;
+        DWORD   hate<format=binary>;
+    } pedGroup[32];         
+} block19;
+
+
+// Block 20: Tags
+struct tBlock20_Tags
+{
+    tblockHeader header;
+    int     nTags;
+    byte    tagsPaintStatus[nTags];
+} block20;
+
+// Block 21: IPL
+struct tBlock21_IPL
+{
+    tblockHeader header;
+    int     nIPLs; /* unused? */
+    byte    boolIPLFlags[255];
+} block21;
+
+// Block 22: Shopping
+struct tBlock22_Shopping
+{
+    tblockHeader header;
+    int     nEntries;
+    struct  tblock22Chunk
+    {
+        byte    unknown[8];
+    } entries[nEntries];
+    int             nUnknown;
+    byte            unknownFlags[nUnknown];
+} block22;
+
+// Block 23: Shopping
+struct tBlock23_GangWars
+{
+    tblockHeader    header;
+    DWORD           _size<format=hex>;
+    byte            boolEnableGangWars;
+    byte            __gap1[3];
+    DWORD           currentWarStage;
+    DWORD           timeLastStageStarted;
+    int             indexZonePop;
+    int             indexZoneInfo;
+    RwV3D           unknown1;
+    DWORD           unknown2[3];
+    DWORD           unknown_time;
+    int             _hoodUnderAttackStage;
+    int             _nextAttackTime;
+    RwV3D           unknown3;
+    int             _hoodAttackNotifyTime;
+    DWORD           _hoodAttackMarkerHandle;
+    byte            unknown4;
+    byte            __gap2[3];
+    float           territoriesUnderControl;
+    float           _territoriesUnderControl;
+} block23;
+
+// Block 24: Unique Stunt Jumps
+struct tBlock24_UniqueStuntJumps
+{
+    tblockHeader header;
+    int     nUSJ;
+    struct  tUSJ
+    {
+        RwV3D   startZone[2];
+        RwV3D   landZone[2];
+        RwV3D   cameraCoords;
+        int     reward;
+        byte    boolIsUSJDone, boolIsUSJFound;
+        byte    __gap[2];
+    } jumps[nUSJ];
+} block24;
+
+
+// Block 25: ENEX
+struct tBlock25_ENEX
+{
+    tblockHeader header;
+    int         nEntries;
+    WORD        data[nEntries];
+    local int EnexFlag, i;
+    for(i, EnexFlag = 0; i < 400; i++)
+    {  
+        struct tENEX
+        {
+            INT16   value1;
+            if (value1 == -1) 
+            {
+                EnexFlag = 1;
+                break;
+            };
+            INT16   value2;
+            INT16   value3;
+        };
+        tENEX    data;
+        if (EnexFlag) break;
+    }
+    if (!EnexFlag) WORD unknown; //need or not?
+} block25;
+
+
+// Block 26: Radio Data
+struct tBlock26_RadioData
+{
+    tblockHeader header;
+    struct tStationInfo
+    {
+        byte    unknown1[20];
+        int     unknown2[8];
+        int     unknown3[40];
+        int     unknown4[15];
+    } stations[14];
+    byte        nCitiesUnlocked; /* stat 181 */
+    byte        stats[22];
+    ubyte       monthDayWhenUpdated;
+    ubyte       hourWhenUpdated;
+    ubyte       hoursToUpdate;
+    ubyte       _updateFlag;
+    ubyte       lastUpdatedFlagNumber;
+} block26;
+
+
+// Block 27: Entrance markers
+struct tBlock27_EntranceMarkers
+{
+    tblockHeader header;
+    struct tEntranceMarkers
+    {
+        int         status;
+        RwV3D       pos;
+        DWORD       colorR, colorG, colorB;   
+    } markers[5];
+} block27;
+
+// CheckSum
+FSeek(FileSize()-4);
+//BigEndian();
+DWORD   checkSum <format=hex>; //todo; checksum recalc; use SaveCheckSum.1sc

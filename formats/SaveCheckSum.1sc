@@ -1,0 +1,10 @@
+//--------------------------------------
+//--- 010 Editor v3.0 Script File
+//
+// File:
+// Author:
+// Revision:
+// Purpose:
+//--------------------------------------
+WriteUInt(FileSize()-4, Checksum(CHECKSUM_BYTE, 0, FileSize()-4));
+
