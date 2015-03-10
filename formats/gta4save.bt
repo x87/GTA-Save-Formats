@@ -1,0 +1,89 @@
+//--------------------------------------
+//--- 010 Editor v5.0 Binary Template
+//
+// Author: Seemann
+// Purpose: documenting GTA IV save file format
+// See http://www.gtamodding.com/wiki/Saves_(GTA_4)
+//--------------------------------------
+
+typedef struct {
+    float x, y, z;
+} Vec3;
+
+struct {
+    DWORD       versionNumber <comment="0x39; see version.txt">;
+    DWORD       fileSizeInBytes ;
+    DWORD       _dwGlobalsSize;
+    CHAR        sig[4] <comment="SAVE">;
+    wchar_t     saveGameName[128];
+    
+} metaData;
+
+local int n = 1;
+
+struct
+{
+    switch (n++)
+    {
+    /*
+        0: SimpleVars
+        1: PlayerInfo
+        2: ExtraContent
+        3: Scripts
+        4: Garages
+        5: GameLogic
+        6: PathFind
+        7: Pickups
+        8: Restart
+        9: Radar
+        10: Zones
+        11: Gangs
+        12: CarGenerators
+        13: Stats
+        14: IplStore
+        15: StuntJumps
+        16: Radio
+        17: Objects
+        18: Relationships
+        19: Inventory
+        20: Pools
+        21: PhoneInfo
+        22: AudioScriptObject
+        23: SetPieces
+        24: Streaming
+        25: PedType
+        26: Tags
+        27: Shopping
+        28: GangWars
+        29: EntryExits
+        30: 3dMarkers
+        31: Vehicles
+    */
+        case 2:    
+            struct {
+                CHAR        sig[5] <comment="BLOCK">;
+                DWORD       size;
+                Vec3        _camPos;
+                BYTE        _unknown1[12];
+                DWORD       playerMoney;
+                BYTE        _unknown2[4];
+                DWORD       playerMoneyOnScreen;
+                BYTE        _unknown3[44];
+                Vec3        _pos;
+                BYTE        _unknown[size-101];
+            } block <name="PlayerInfo">;
+            break;
+        default:       
+            struct {
+                CHAR    sig[5] <comment="BLOCK">;
+                DWORD   size;
+                if (size > 9) byte unknown[size-9];
+            } block;
+    }
+
+} block[32]<optimize=false,open=true>;
+
+UINT32      checkSum;
+
+CHAR        end[4] <comment="END">;       
+
