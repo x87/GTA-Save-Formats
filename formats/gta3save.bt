@@ -339,7 +339,7 @@ struct
                     DWORD   _unknown;
                     DWORD   _unknown;
                     DWORD   _unknown;
-                } Object[nNumObjects] <optimize=false>;
+                } aObject[nNumObjects] <optimize=false>;
             } data;
         } block <name="Objects">;
         break;
