@@ -6,6 +6,16 @@
 // See http://www.gtamodding.com/wiki/Saves_(GTA_4)
 //--------------------------------------
 
+void align(int n)
+{
+    FSkip(n);
+};
+
+void unknownYet(int n)
+{
+    FSkip(n);
+};
+
 typedef struct {
     float x, y, z;
 } Vec3;
@@ -19,71 +29,89 @@ struct {
     
 } metaData;
 
-local int n = 1;
+local int n;
+local int blockSize;
 
-struct
+for (n = 0; n < 32; n++) 
 {
-    switch (n++)
-    {
-    /*
-        0: SimpleVars
-        1: PlayerInfo
-        2: ExtraContent
-        3: Scripts
-        4: Garages
-        5: GameLogic
-        6: PathFind
-        7: Pickups
-        8: Restart
-        9: Radar
-        10: Zones
-        11: Gangs
-        12: CarGenerators
-        13: Stats
-        14: IplStore
-        15: StuntJumps
-        16: Radio
-        17: Objects
-        18: Relationships
-        19: Inventory
-        20: Pools
-        21: PhoneInfo
-        22: AudioScriptObject
-        23: SetPieces
-        24: Streaming
-        25: PedType
-        26: Tags
-        27: Shopping
-        28: GangWars
-        29: EntryExits
-        30: 3dMarkers
-        31: Vehicles
-    */
-        case 2:    
-            struct {
-                CHAR        sig[5] <comment="BLOCK">;
-                DWORD       size;
-                Vec3        _camPos;
-                BYTE        _unknown1[12];
-                DWORD       playerMoney;
-                BYTE        _unknown2[4];
-                DWORD       playerMoneyOnScreen;
-                BYTE        _unknown3[44];
-                Vec3        _pos;
-                BYTE        _unknown[size-101];
-            } block <name="PlayerInfo">;
-            break;
-        default:       
-            struct {
-                CHAR    sig[5] <comment="BLOCK">;
-                DWORD   size;
-                if (size > 9) byte unknown[size-9];
-            } block;
-    }
 
-} block[32]<optimize=false,open=true>;
+    struct {        
+        getName(n);
+        DWORD       size;
+        blockSize = size;
+
+        switch (n) {
+   
+        case 0: /*SimpleVars*/
+            unknownYet( 0x20 );
+            DWORD       nMillisecondsPerGameMinute;
+            unknownYet( 0x4 );
+            DWORD       nMonthInGame;
+            DWORD       nDayInGame;
+            DWORD       nHoursInGame;
+            DWORD       nMinutesInGame;
+            DWORD       nDayOfWeekInGame;
+            unknownYet( 0x4 );
+            UINT32      nTimeInMilliseconds;
+            UINT32      nFrameCounter;
+            break;
+
+        case 1: /*PlayerInfo*/  
+            Vec3        _unknown;
+            unknownYet( 0xC );
+            DWORD       playerMoney;
+            unknownYet( 0x4 );
+            DWORD       playerMoneyOnScreen;
+            unknownYet( 44 );
+            Vec3        _unknown;
+            break;
+
+        default:
+            break;
+        }        
+    } block <open=true>;
+    
+    if (sizeof(block) < blockSize) align(blockSize-sizeof(block));
+    
+}
 
 UINT32      checkSum;
-
 CHAR        end[4] <comment="END">;       
 
+void getName(int n) {
+    switch (n) {
+    case 0: CHAR sig[5] <comment="SimpleVars">; return;
+    case 1: CHAR sig[5] <comment="PlayerInfo">; return;
+    case 2: CHAR sig[5] <comment="ExtraContent">; return;
+    case 3: CHAR sig[5] <comment="Scripts">; return;
+    case 4: CHAR sig[5] <comment="Garages">; return;
+    case 5: CHAR sig[5] <comment="GameLogic">; return;
+    case 6: CHAR sig[5] <comment="PathFind">; return;
+    case 7: CHAR sig[5] <comment="Pickups">; return;
+    case 8: CHAR sig[5] <comment="Restart">; return;
+    case 9: CHAR sig[5] <comment="Radar">; return;
+    case 10: CHAR sig[5] <comment="Zones">; return;
+    case 11: CHAR sig[5] <comment="Gangs">; return;
+    case 12: CHAR sig[5] <comment="CarGenerators">; return;
+    case 13: CHAR sig[5] <comment="Stats">; return;
+    case 14: CHAR sig[5] <comment="IplStore">; return;
+    case 15: CHAR sig[5] <comment="StuntJumps">; return;
+    case 16: CHAR sig[5] <comment="Radio">; return;
+    case 17: CHAR sig[5] <comment="Objects">; return;
+    case 18: CHAR sig[5] <comment="Relationships">; return;
+    case 19: CHAR sig[5] <comment="Inventory">; return;
+    case 20: CHAR sig[5] <comment="Pools">; return;
+    case 21: CHAR sig[5] <comment="PhoneInfo">; return;
+    case 22: CHAR sig[5] <comment="AudioScriptObject">; return;
+    case 23: CHAR sig[5] <comment="SetPieces">; return;
+    case 24: CHAR sig[5] <comment="Streaming">; return;
+    case 25: CHAR sig[5] <comment="PedType">; return;
+    case 26: CHAR sig[5] <comment="Tags">; return;
+    case 27: CHAR sig[5] <comment="Shopping">; return;
+    case 28: CHAR sig[5] <comment="GangWars">; return;
+    case 29: CHAR sig[5] <comment="EntryExits">; return;
+    case 30: CHAR sig[5] <comment="3dMarkers">; return;
+    case 31: CHAR sig[5] <comment="Vehicles">; return;
+    default: CHAR sig[5];
+    };
+};
