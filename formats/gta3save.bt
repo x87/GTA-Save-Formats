@@ -748,7 +748,7 @@ struct
                     PerfectTripleInsaneStunt, 
                     QuadrupleInsaneStunt, 
                     PerfectQuadrupleInsaneStunt
-                }  ebestStuntSoFar;
+                }  eBestStuntSoFar;
                 DWORD   nUniqueStuntJumpsFound <comment="opcode 0313">;
                 DWORD   nUniqueStuntJumpsTotal <comment="opcode 0314">;
                 DWORD   nMissionsAttempts <comment="opcode 0317">;
@@ -770,7 +770,7 @@ struct
                 DWORD   nHighestParamedicMissionlevel <comment="opcode 0403">;
                 DWORD   nTotalFiresEextinguished <comment="opcode 0404">;
                 DWORD   nLongestFlightInDodo <comment="opcode 0406">;
-                DWORD   nbestTimeBombDefusal <comment="opcode 0407">;
+                DWORD   nBestTimeBombDefusal <comment="opcode 0407">;
                 DWORD   nRampagesPassed <comment="opcode 041B">;
                 DWORD   nTotalNumberRampages <comment="opcode 0408">;
                 DWORD   nTotalNumberMissions <comment="opcode 042C">;
@@ -778,7 +778,6 @@ struct
                 DWORD   nHighestScoreRecord[16] <comment="opcode 042F">;
                 DWORD   nPeopleKilledSinceLastCheckpoint;
                 DWORD   nPeopleKilledNoWastedBusted;
-                //DWORD   stat[102];
                 CHAR    szLastMissionPassedName[8] <comment="GXT key">;
             } data;
         } block <name="Stats">;
