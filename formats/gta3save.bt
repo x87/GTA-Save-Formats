@@ -33,7 +33,7 @@ struct
     DWORD size;
     switch (n++)
     {
-    case 0: /* BLOCK 0: MISCELLANEOUS */
+    case 0: /* BLOCK 0: SIMPLEVARS */
         struct
         {
             wchar_t szTitle[24];
@@ -154,7 +154,7 @@ struct
                     } aRunningScript[nNumActiveScripts]<optimize=false>;
                 } data;
             } data;
-        } block <name="Misc">;
+        } block <name="SimpleVars">;
         break;
 
     case 1: /* BLOCK 1: PLAYER PEDS */
@@ -717,12 +717,69 @@ struct
             DWORD size;
             struct
             {
-                DWORD size;
-                struct
-                {
-                    DWORD   stat[102];
-                    CHAR    szLastMissionPassedName[8] <comment="GXT key">;
-                } data;
+                DWORD   nPeopleYouWasted;
+                DWORD   nPeopleOtherWasted;
+                DWORD   nCarsExploded;
+                DWORD   nShotsMade;
+                DWORD   nPedtypeWasted[23];
+                DWORD   nHelisDestroyed;
+                DWORD   nPlayerProgress;
+                DWORD   nProgressTotal <comment="opcode 030D">;
+                DWORD   nKgsExplosivesUsed;
+                DWORD   nBulletsFired;
+                DWORD   nBulletsThatHit;
+                DWORD   nCarsCrushed;
+                DWORD   nHeadshotsMade;
+                DWORD   nTimesBusted;
+                DWORD   nHospitalVisits;
+                DWORD   nDaysPassed;
+                DWORD   nMmRainFallen;
+                FLOAT   fMaxInsaneJumpDistance;
+                FLOAT   fMaxInsaneJumpHeight;
+                DWORD   nMaxInsaneJumpFlips;
+                DWORD   nMaxInsaneJumpRotation;
+                enum <DWORD> {
+                    NoInsaneStuntsCompleted, 
+                    InsaneStunt, 
+                    PerfectInsaneStunt, 
+                    DoubleInsaneStunt, 
+                    PerfectDoubleInsaneStunt, 
+                    TripleInsaneStunt, 
+                    PerfectTripleInsaneStunt, 
+                    QuadrupleInsaneStunt, 
+                    PerfectQuadrupleInsaneStunt
+                }  ebestStuntSoFar;
+                DWORD   nUniqueStuntJumpsFound <comment="opcode 0313">;
+                DWORD   nUniqueStuntJumpsTotal <comment="opcode 0314">;
+                DWORD   nMissionsAttempts <comment="opcode 0317">;
+                DWORD   nMissionsPassed <comment="opcode 030C">;
+                DWORD   nPassengersDroppedOff <comment="opcode 0315">;
+                DWORD   nCashMadeInTaxi <comment="opcode 0316">;
+                FLAG__  bIndustrialPassed <comment="Portland">;
+                FLAG__  bCommercialPassed <comment="Staunton Island">;
+                FLAG__  bSuburbanPassed <comment="Shoreside Vale">;
+                DWORD   nElBurroTime <comment="Best Turismo time in secs">;
+                FLOAT   fDistanceTravelledOnFoot;
+                FLOAT   fDistanceTravelledInCar;
+                DWORD   n4x4OneTime <comment="Patriot Playground in secs">;
+                DWORD   n4x4TwoTime <comment="A Ride In The Park in secs">;
+                DWORD   n4x4ThreeTime <comment="Gripped! in sec">;
+                DWORD   n4x4MayhemTime <comment="Multistorey Mayhem in secs">;
+                DWORD   nPeopleSavedInAnAmbulance <comment="opcode 0401">;
+                DWORD   nCriminalsKilledOnVigilanteMission <comment="opcode 0402">;
+                DWORD   nHighestParamedicMissionlevel <comment="opcode 0403">;
+                DWORD   nTotalFiresEextinguished <comment="opcode 0404">;
+                DWORD   nLongestFlightInDodo <comment="opcode 0406">;
+                DWORD   nbestTimeBombDefusal <comment="opcode 0407">;
+                DWORD   nRampagesPassed <comment="opcode 041B">;
+                DWORD   nTotalNumberRampages <comment="opcode 0408">;
+                DWORD   nTotalNumberMissions <comment="opcode 042C">;
+                DWORD   nFastestTimeRecord[16] <comment="opcode 042E; unused">;
+                DWORD   nHighestScoreRecord[16] <comment="opcode 042F">;
+                DWORD   nPeopleKilledSinceLastCheckpoint;
+                DWORD   nPeopleKilledNoWastedBusted;
+                //DWORD   stat[102];
+                CHAR    szLastMissionPassedName[8] <comment="GXT key">;
             } data;
         } block <name="Stats">;
         break;
