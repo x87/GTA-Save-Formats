@@ -362,13 +362,38 @@ struct
                 DWORD   nCarsCollectedMilitaryCrane<format=binary, comment="opcode 03ec">;
                 struct
                 {
-                    DWORD   nStaticIndex <comment="index in static objects pool?">;
-                    DWORD   _unknown;
-                    DWORD   _unknown;
-                    FLOAT   _float[25];
-                    DWORD   _unknown;
-                    DWORD   _unknown;
-                    BYTE    unknown[7];
+                    DWORD   nStaticIndex <comment="index in static objects pool">;
+                    DWORD   nObjectIndex <comment="crane magnet index in objects pool">;
+                    DWORD   nAudioEntityIndex;
+                    FLOAT   fPickupZoneX1;
+                    FLOAT   fPickupZoneX2;
+                    FLOAT   fPickupZoneY1;
+                    FLOAT   fPickupZoneY2;
+                    RwV3D   vDropOffPoint <open=true>;
+                    FLOAT   fDropOffHeadingInRad;
+                    FLOAT   fCraneArmPickupRotationInRad;
+                    FLOAT   fCraneArmDropOffRotationInRad;
+                    FLOAT   fCraneArmPickupDistanceFromCenterOfCrane;
+                    FLOAT   fCraneArmDropOffDistanceFromCenterOfCrane;
+                    FLOAT   fCraneArmPickupHeight;
+                    FLOAT   fCraneArmDropOffHeight;
+                    FLOAT   fCraneArmCurrentRotationInRad;
+                    FLOAT   fCraneArmCurrentDistanceFromCenterOfCrane;
+                    FLOAT   fCraneArmCurrentHeight;
+                    RwV3D   vCraneHookInitialPos;
+                    RwV3D   vCraneHookCurrentPos;
+                    FLOAT   _unknown;
+                    FLOAT   _unknown;
+                    DWORD   nVehicleIndex;
+                    DWORD   _nTimer;
+                    BYTE    bCraneActivity <format=binary>;
+                    BYTE    bCraneStatus <format=binary>;
+                    
+                    BYTE    bNumVehiclesCollected;
+                    BYTE    bIsCrusherCrane <comment="opcode 02fb">;
+                    BYTE    bIsMilitaryCrane <comment="opcode 0368">;
+                    BYTE    _unknown;
+                    BYTE    _unknown;
                     align(1);
                 } aCrane[8] <optimize=false>;
             } data;
