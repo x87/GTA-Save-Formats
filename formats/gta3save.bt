@@ -423,16 +423,9 @@ struct
                     WORD    bFlags;
                     RwV3D   vPos;
                 } aPickup[336] <optimize=false>;
-                WORD   _nPickupsCollected;
+                WORD    nCollectedPickUpIndex;
                 align(2);
-                struct
-                {
-                    DWORD   unknown;
-                    DWORD   unknown;
-                    DWORD   unknown;
-                    DWORD   unknown;
-                    DWORD   unknown;
-                } _aCollectedPickup[4] <optimize=false>;
+                DWORD   aPickUpsCollected[20] <optimize=false>;
             } data;
         } block <name="Pickups">;
         break;
