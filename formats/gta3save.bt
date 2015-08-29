@@ -107,8 +107,8 @@ struct
                         {
                             DWORD   nType;
                             DWORD   nBuildingHandle;
-                            DWORD   nNewModel;
-                            DWORD   nOldModel;
+                            INT32   nNewModel;
+                            INT32   nOldModel;
                         } aBuildingSwap[25];
 
                         struct
@@ -347,7 +347,8 @@ struct
             DWORD   size;
             struct
             {
-                BYTE    _bUnknown[size] <format=binary, optimize=false>;
+                BYTE    bDisabledPedNodes[size / 2] <format=binary, optimize=false>;
+                BYTE    bDisabledCarNodes[size / 2] <format=binary, optimize=false>;
             } data;
         } block <name="PathFind">;
         break;
