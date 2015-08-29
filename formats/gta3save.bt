@@ -347,8 +347,8 @@ struct
             DWORD   size;
             struct
             {
-                BYTE    bDisabledPedNodes[size / 2] <format=binary, optimize=false>;
-                BYTE    bDisabledCarNodes[size / 2] <format=binary, optimize=false>;
+                BYTE    bDisabledPedNodes[size / 2] <format=binary, optimize=false, comment="opcode 022b">;
+                BYTE    bDisabledCarNodes[size / 2] <format=binary, optimize=false, comment="opcode 01e8">;
             } data;
         } block <name="PathFind">;
         break;
